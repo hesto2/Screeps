@@ -1,0 +1,18 @@
+module.exports = function (creep) {
+
+    var spawn = Game.spawns.Spawn1;
+    var ctrl = creep.room.controller;
+    if(creep.energy < creep.energyCapacity)
+    {
+        
+        creep.moveTo(spawn);
+        spawn.transferEnergy(creep);
+    }
+    else
+    {
+        creep.moveTo(ctrl);
+        creep.upgradeController(creep.room.controller);
+    }
+    
+    
+}
