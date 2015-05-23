@@ -1,0 +1,61 @@
+var harvester = require("harvester");
+var courier = require("courier");
+var harvesters = 2;
+var couriers = 1
+var spawn1 = Game.spawns.Spawn1;
+//First tier
+console.log(getActiveCreeps("courier"))
+if(spawn1.energy > 1000)
+{
+    harvesters = 10;
+    couriers = 5;
+}
+if(spawn1.energy > 3500)
+{
+    harvesters = 25;
+    couriers = 15;
+}
+else
+{
+    harvesters = 3;
+    couriers = 1;
+}
+
+if(getActiveCreeps("harvester") < harvesters ){
+    spawn1.createCreep([WORK,CARRY,MOVE,MOVE],undefined, [role="harvester"]);
+    
+}
+if(getActiveCreeps("courier") < couriers){
+    spawn1.createCreep([WORK,CARRY,CARRY,MOVE,MOVE],undefined, [role="courier"]);
+    
+}
+
+for(var name in Game.creeps) {
+    
+	var creep = Game.creeps[name];
+	
+    if(creep.memory[0] == "harvester")
+    {
+        harvester(creep);
+    }
+    else if(creep.memory[0] == "courier")
+    {
+        courier(creep);
+    }
+    else if(creep.memory.role == undefined){
+        creep.memory.role = "harvester";
+    }
+}
+
+function getActiveCreeps(role){
+    var count = 0;
+    for(var name in Game.creeps){
+        var creep = Game.creeps[name];
+        if(creep.memory[0] == role)
+        {
+            count++;
+        }
+       
+    }
+    return count;
+}
