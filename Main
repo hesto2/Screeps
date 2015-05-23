@@ -1,29 +1,72 @@
-/*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('Janitor'); // -> 'a thing'
- */
- module.exports = function(creep){
-     var spawn = Game.spawns.Spawn1;
-     var target = creep.pos.findClosest(FIND_DROPPED_ENERGY);
-     var ePath = creep.room.findPath(creep, target);
-     var sPath = creep.room.findPath(creep, spawn);
-     if(target)
-     {
-         if(creep.energy > 0 && ePath.length < sPath.length)
-         {
-             //Go get the energy
-             creep.moveTo(target)
-             creep.pickup(target);
-         }
-         else
-         {
-             //Go drop it off
-             creep.moveTo(spawn);
-             creep.transferEnergy(spawn);
-         }
-     }
-     
- }
+var harvester = require("harvester");
+var courier = require("courier");
+var janitor = require("Janitor");
+var harvesters = 2;
+var couriers = 1
+var janitors = 1;
+var spawn1 = Game.spawns.Spawn1;
+//First tier
+console.log(getActiveCreeps("janitor"))
+console.log(janitors);
+if(spawn1.energy > 1000)
+{
+    harvesters = 10;
+    couriers = 5;
+    janitors = 1;
+}
+if(spawn1.energy > 3500)
+{
+    harvesters = 25;
+    couriers = 10;
+    janitors = 1
+}
+else
+{
+    harvesters = 3;
+    couriers = 1;
+    janitors = 0
+}
+
+if(getActiveCreeps("harvester") < harvesters ){
+    spawn1.createCreep([WORK,CARRY,MOVE,MOVE],undefined, {role:"harvester"});
+    
+}
+if(getActiveCreeps("courier") < couriers){
+    spawn1.createCreep([WORK,CARRY,CARRY,MOVE,MOVE],undefined, {role:"courier"});
+    
+}
+
+
+for(var name in Game.creeps) {
+    
+	var creep = Game.creeps[name];
+	
+    if(creep.memory[0] == "harvester" || creep.memory.role == "harvester")
+    {
+        harvester(creep);
+    }
+    else if(creep.memory[0] == "courier"|| creep.memory.role == "courier")
+    {
+        courier(creep);
+    }
+    else if(creep.memory[0] == "janitor"|| creep.memory.role == "janitor")
+    {
+        janitor(creep);
+    }
+    else if(creep.memory.role == undefined){
+        creep.memory.role = "harvester";
+    }
+}
+
+function getActiveCreeps(role){
+    var count = 0;
+    for(var name in Game.creeps){
+        var creep = Game.creeps[name];
+        if(creep.memory[0] == role)
+        {
+            count++;
+        }
+       
+    }
+    return count;
+}
