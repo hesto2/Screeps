@@ -1,11 +1,12 @@
 var harvester = require("harvester");
 var courier = require("courier");
+var builder = require("builder");
+var spawn = require("spawn");
 var totCouriers=0;
 var totHarvesters=0;
+var totBuilders = 0;
 var totJanitors=0;
-var harvesters;
-var couriers;
-var janitors;
+var totTransfer = 0
 var spawn1 = Game.spawns.Spawn1;
 
 //ADD SEPARATE MODULE JUST FOR SPAWN LOGIC AND ROLE ASSIGNMENT
@@ -24,52 +25,27 @@ for(var name in Game.creeps) {
         courier(creep);
         totCouriers++;
     }
-    else if(creep.memory.role == "janitor")
-    {
-        janitor(creep);
-        totJanitors++;
+    else if(creep.memory.role == 'builder') {
+        builder(creep);
+        totBuilders++;
+    }
+    else if(creep.memory.role == 'worker') {
+        worker(creep);
+        totWorkers++;
+    }
+    else if(creep.memory.role == 'transfer') {
+        transfer(creep);
+        totTransfer++;
     }
 }
 
-//First tier
-
-if(spawn1.energy > 3500)
-{
-    harvesters = 25;
-    couriers = 8;
-    janitors = 1
-}
-else if(spawn1.energy > 1000)
-{
-    harvesters = 15;
-    couriers = 4;
-    janitors = 1;
-}
-else if(spawn1.energy > 750)
-{
-    harvesters = 10;
-    couriers = 2;
-}
-else
-{
-    harvesters = 5;
-    couriers = 2;
-    janitors = 0
-}
-
-if(totHarvesters < harvesters ){
-    var index = Memory.curSource;
-    Memory.curSource++;
-    if(Memory.curSource >= Memory.safeSources.length){Memory.curSource = 0}
-    var target = Memory.safeSources[index];
-    
-    
-    spawn1.createCreep([WORK,CARRY,MOVE,MOVE],undefined, {role:"harvester",target:target,task:"coming"});
-
-}
-else if(totCouriers < couriers){
-    spawn1.createCreep([WORK,CARRY,MOVE,MOVE],undefined, {role:"courier"});
-}
+//MemoryAssignment
+Memory.totals.couriers = totCouriers;
+Memory.totals.harvesters = totHarvesters;
+Memory.totals.builders = totBuilders;
+Memory.totals.workers = totWorkers;
+Memory.totals.workers = totTransfer;
+spawn();
 
 
 
