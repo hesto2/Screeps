@@ -14,8 +14,8 @@ var lairs = Game.spawns.Spawn1.room.find(FIND_HOSTILE_STRUCTURES)
 
 for(var name in Game.creeps) {
     
-	var creep = Game.creeps[name];
-	
+    var creep = Game.creeps[name];
+    
     if(creep.memory.role == "harvester")
     {
         harvester(creep);
