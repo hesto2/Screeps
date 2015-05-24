@@ -8,8 +8,6 @@ var couriers;
 var janitors;
 var spawn1 = Game.spawns.Spawn1;
 
-var lairs = Game.spawns.Spawn1.room.find(FIND_HOSTILE_STRUCTURES)
-
 //ADD SEPARATE MODULE JUST FOR SPAWN LOGIC AND ROLE ASSIGNMENT
 
 for(var name in Game.creeps) {
@@ -37,36 +35,36 @@ for(var name in Game.creeps) {
 
 if(spawn1.energy > 3500)
 {
-    harvesters = 16;
+    harvesters = 25;
     couriers = 8;
     janitors = 1
 }
 else if(spawn1.energy > 1000)
 {
-    harvesters = 14;
+    harvesters = 15;
     couriers = 4;
     janitors = 1;
 }
-else
+else if(spawn1.energy > 750)
 {
     harvesters = 10;
+    couriers = 2;
+}
+else
+{
+    harvesters = 5;
     couriers = 2;
     janitors = 0
 }
 
 if(totHarvesters < harvesters ){
-    var sources = Memory.safeSources;
-    var target = sources[0]; 
-    for(var source in sources)
-    {
-        source = sources[source];
-        if(source.energy >= target.energy)
-        {
-            target = source;
-        }
-        
-    }
-    spawn1.createCreep([WORK,CARRY,MOVE,MOVE],undefined, {role:"harvester",target:target});
+    var index = Memory.curSource;
+    Memory.curSource++;
+    if(Memory.curSource >= Memory.safeSources.length){Memory.curSource = 0}
+    var target = Memory.safeSources[index];
+    
+    
+    spawn1.createCreep([WORK,CARRY,MOVE,MOVE],undefined, {role:"harvester",target:target,task:"coming"});
 
 }
 else if(totCouriers < couriers){
