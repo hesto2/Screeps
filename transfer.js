@@ -25,7 +25,19 @@ module.exports = function(creep)
 		}
 		else
 		{
-		    creep.moveTo(creep.memory.target);  
+			if(creep.memory.target.energy == 0 || creep.memory.target.ticksToLive < 25 || creep.ticksToLive < 25 || creep.memory.target == undefined)
+			{
+				creep.memory.target = "none";
+				var target = Game.getObjectById(creep.memory.target.id)
+				if(target)target.memory.task = "coming";
+			}
+			else
+			{
+				console.log(1)
+				var target = Game.getObjectById(creep.memory.target.id)
+				creep.moveTo(target); 
+			}
+		     
 		}
 		
 		

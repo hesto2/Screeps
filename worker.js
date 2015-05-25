@@ -16,8 +16,15 @@ module.exports = function (creep) {
                     function(object){
                         if(object.memory.role =="transfer" && object.memory.target.id == creep.id)return object;}})
                 
-                creep.moveTo(target);
-                creep.transferEnergy(target);
+                if(target  == undefined)
+                {
+                    creep.memory.task ="going";
+                }
+                else
+                {
+                    creep.moveTo(target);
+                    creep.transferEnergy(target);
+                }
             }
             else
             {
