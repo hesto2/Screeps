@@ -1,12 +1,15 @@
-var harvester = require("harvester");
+
 var courier = require("courier");
 var builder = require("builder");
 var spawn = require("spawn");
+var worker = require("worker");
+var transfer = require("transfer");
 var totCouriers=0;
 var totHarvesters=0;
 var totBuilders = 0;
 var totJanitors=0;
-var totTransfer = 0
+var totTransfer = 0;
+var totWorkers =0;
 var spawn1 = Game.spawns.Spawn1;
 
 //ADD SEPARATE MODULE JUST FOR SPAWN LOGIC AND ROLE ASSIGNMENT
@@ -14,13 +17,7 @@ var spawn1 = Game.spawns.Spawn1;
 for(var name in Game.creeps) {
     
     var creep = Game.creeps[name];
-    
-    if(creep.memory.role == "harvester")
-    {
-        harvester(creep);
-        totHarvesters++;
-    }
-    else if(creep.memory.role == "courier")
+    if(creep.memory.role == "courier")
     {
         courier(creep);
         totCouriers++;
@@ -40,11 +37,11 @@ for(var name in Game.creeps) {
 }
 
 //MemoryAssignment
-Memory.totals.couriers = totCouriers;
-Memory.totals.harvesters = totHarvesters;
-Memory.totals.builders = totBuilders;
-Memory.totals.workers = totWorkers;
-Memory.totals.workers = totTransfer;
+Memory.couriers = totCouriers;
+Memory.harvesters = totHarvesters;
+Memory.builders = totBuilders;
+Memory.workers = totWorkers;
+Memory.transfers = totTransfer;
 spawn();
 
 

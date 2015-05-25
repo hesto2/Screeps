@@ -12,7 +12,10 @@ module.exports = function (creep) {
             
             if(creep.memory.task == "meeting")
             {
-                var target = creep.room.find(FIND_MY_CREEPS, filter:{role:"transfer", target:creep})
+                var target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:
+                    function(object){
+                        if(object.memory.role =="transfer" && object.memory.target.id == creep.id)return object;}})
+                
                 creep.moveTo(target);
                 creep.transferEnergy(target);
             }
@@ -26,6 +29,4 @@ module.exports = function (creep) {
             
 
         }
-    
-    
 }
