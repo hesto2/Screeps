@@ -9,6 +9,7 @@ module.exports = function()
 	//Bodies
 	var workerBody = [WORK,WORK,CARRY,MOVE];
 	var transferBody = [CARRY,MOVE,MOVE,MOVE];
+	var courierBody = [CARRY,WORK,WORK,MOVE];
 /*
 	var target;
 	for(var source in Memory.safeSources)
@@ -29,11 +30,22 @@ module.exports = function()
 
 
 	//First tier
-	
-	if(spawn1.energy > 3500)
+	if(spawn1.energy > 6000)
+	{
+	    workers = 15
+	    couriers = 12;
+	    builders = 5;
+	}
+	else if(spawn1.energy > 5000)
+	{
+	    workers = 15
+	    couriers = 9;
+	    builders = 5;
+	}
+	else if(spawn1.energy > 3500)
 	{
 	    workers = 13
-	    couriers = 3;
+	    couriers = 6;
 	    builders = 5;
 	}
 	else if(spawn1.energy > 1500)
@@ -63,6 +75,8 @@ module.exports = function()
 	    builders = 0;
 	}
     transfers = workers
+
+    // CREATE LOGIC
 	if(Memory.workers < workers ){
 	    var index = Memory.curSource;
 	    console.log(Memory.curSource);
@@ -74,14 +88,27 @@ module.exports = function()
 	    spawn1.createCreep(workerBody,undefined, {role:"worker",target:target,task:"coming"});
 
 	}
+
 	else if(Memory.couriers < couriers){
 	    console.log("Spawning courier");
-	    spawn1.createCreep([WORK,CARRY,MOVE,MOVE],undefined, {role:"courier"});
+	    spawn1.createCreep(courierBody,undefined, {role:"courier", task:"coming"});
 	}
+
 	else if(Memory.transfers < transfers){
 	    console.log("Spawning Transfer");
-	    spawn1.createCreep(transferBody,undefined, {role:"transfer", target:"none"});
+	     var count = spawn1.room.find(FIND_MY_CREEPS, {filter:
+                    function(object){
+                        if(object.memory.role =="transfer" && object.memory.task == "extension")return object;}})
+	     var eCount = spawn1.room.find(FIND_MY_STRUCTURES, {filter:
+                function(object){
+                    return object.structureType == "extension"
+                    
+                }})
+	     if(count.length <= eCount.length*.5){var task="extension"}
+	     else{var task ="source"}
+	    spawn1.createCreep(transferBody,undefined, {role:"transfer", target:"none", task:task});
 	}
+
 	else if(Memory.builders < builders && spawn1.room.find(FIND_CONSTRUCTION_SITES).length){
 	    console.log("Spawning builder");
 	    spawn1.createCreep([WORK,CARRY,MOVE,MOVE],undefined, {role:"builder"});

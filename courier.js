@@ -1,4 +1,3 @@
-var harvester = require("harvester");
 module.exports = function (creep) {
     if(creep.memory.task == "spawn")
     {
@@ -8,21 +7,35 @@ module.exports = function (creep) {
     var spawn = Game.spawns.Spawn1;
     var ctrl = creep.room.controller;
     var task = creep.memory.task;  
-    
-   // if(creep.memory.task == "controller")
+   // if(creep.memory.role == "controller")
     {
         if(creep.energy == 0 )
         {
+            creep.memory.task = "going";
             creep.moveTo(spawn);
-            spawn.transferEnergy(creep);
-        }
+            if(spawn.energy < 500)
+            {
+                spawn.transferEnergy(creep,25);
+            }
+            else if(spawn.energy < 100)
+            {
+                spawn.transferEnergy(creep,5);
+            }
+            else
+            {
+                spawn.transferEnergy(creep);
+            }
+        
+            }
         else
-        {
+        {   
+            creep.memory.task = "coming";
             creep.moveTo(ctrl);
+            creep.memory.task = "working";
             creep.upgradeController(ctrl);
         }
     }/*
-    else if(creep.memory.task == "extension")
+    else if(creep.memory.role == "extension")
     {
         if(creep.energy == 0 )
         {

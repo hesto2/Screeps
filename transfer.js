@@ -34,7 +34,20 @@ module.exports = function(creep)
 	else
 	{
 		creep.memory.target = "none";
-		creep.moveTo(Game.spawns.Spawn1);    
-        creep.transferEnergy(Game.spawns.Spawn1)
+		
+		if(Game.spawns.Spawn1.energy >= .95*Game.spawns.Spawn1.energyCapacity)
+		    {
+		        console.log("SPAWN REACHING CAPACITY, MOVING TO HELP COURIERS")
+		        var target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){if(object.memory.role =="courier" && object.energy < object.energyCapacity)return object;}})
+		        console.log(target)
+		        creep.moveTo(target)
+		        creep.transferEnergy(target)
+		    }
+		    else
+		    {
+		        creep.moveTo(Game.spawns.Spawn1);    
+                creep.transferEnergy(Game.spawns.Spawn1)
+		    }
+		
 	}
 }
