@@ -5,6 +5,8 @@ module.exports = function()
     var couriers;
     var janitors;
     var builders;
+    var warriors;
+    var medics;
 	var spawn1 = Game.spawns.Spawn1;
 	//Bodies
 	var workerBody = [WORK,WORK,CARRY,MOVE];
@@ -30,27 +32,31 @@ module.exports = function()
 
 
 	//First tier
-	if(spawn1.energy > 6000)
+	if(spawn1.energy > 5500)
 	{
 	    workers = 15
 	    couriers = 12;
+	    warriors = 10;
 	    builders = 5;
 	}
-	else if(spawn1.energy > 5000)
+	else if(spawn1.energy > 4250)
 	{
-	    workers = 15
+	    workers = 15;
+	    warriors = 7;
 	    couriers = 9;
 	    builders = 5;
 	}
 	else if(spawn1.energy > 3500)
 	{
-	    workers = 13
+	    workers = 13;
+	    warriors = 5;
 	    couriers = 6;
 	    builders = 5;
 	}
 	else if(spawn1.energy > 1500)
 	{
 	    workers = 9;
+	    warriors = 0;
 	    couriers = 4;
 	    builders =4;
 
@@ -58,6 +64,7 @@ module.exports = function()
 	else if(spawn1.energy > 1000)
 	{
 	    workers = 7
+	    warriors = 0;
 	    couriers = 3;
 	    builders = 3;
 	}

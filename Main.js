@@ -10,6 +10,7 @@ var totBuilders = 0;
 var totJanitors=0;
 var totTransfer = 0;
 var totWorkers =0;
+var totWarriors=0;
 var spawn1 = Game.spawns.Spawn1;
 
 //ADD SEPARATE MODULE JUST FOR SPAWN LOGIC AND ROLE ASSIGNMENT
@@ -41,6 +42,11 @@ for(var name in Game.creeps) {
         creep.memory.task = "coming"
         creep.memory.target = Memory.safeSources[Memory.curSource];
     }
+    else if(creep.memory.role == "warrior")
+    {
+        //Add warrior call
+        totWarriors++;
+    }
 }
 
 //MemoryAssignment
@@ -49,6 +55,7 @@ Memory.harvesters = totHarvesters;
 Memory.builders = totBuilders;
 Memory.workers = totWorkers;
 Memory.transfers = totTransfer;
+Memory.warriors = totWarriors;
 spawn();
 
 
