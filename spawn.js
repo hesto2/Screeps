@@ -12,6 +12,7 @@ module.exports = function()
 	var workerBody = [WORK,WORK,CARRY,MOVE];
 	var transferBody = [CARRY,MOVE,MOVE,MOVE];
 	var courierBody = [CARRY,WORK,WORK,MOVE];
+	var warriorBody = [TOUGH,ATTACK,ATTACK,MOVE,MOVE]
 /*
 	var target;
 	for(var source in Memory.safeSources)
@@ -36,27 +37,27 @@ module.exports = function()
 	{
 	    workers = 15
 	    couriers = 12;
-	    warriors = 10;
+	    warriors = 12;
 	    builders = 5;
 	}
 	else if(spawn1.energy > 4250)
 	{
 	    workers = 15;
-	    warriors = 7;
+	    warriors = 9;
 	    couriers = 9;
 	    builders = 5;
 	}
 	else if(spawn1.energy > 3500)
 	{
 	    workers = 13;
-	    warriors = 5;
+	    warriors = 6;
 	    couriers = 6;
 	    builders = 5;
 	}
 	else if(spawn1.energy > 1500)
 	{
 	    workers = 9;
-	    warriors = 0;
+	    warriors = 3;
 	    couriers = 4;
 	    builders =4;
 
@@ -64,7 +65,7 @@ module.exports = function()
 	else if(spawn1.energy > 1000)
 	{
 	    workers = 7
-	    warriors = 0;
+	    warriors = 1;
 	    couriers = 3;
 	    builders = 3;
 	}
@@ -84,7 +85,19 @@ module.exports = function()
     transfers = workers
 
     // CREATE LOGIC
-	if(Memory.workers < workers ){
+    if(Memory.warriors < warriors)
+    {
+    	var flags = spawn1.room.find(FIND_FLAGS, {filter:{color:COLOR_RED}})
+    	var target;
+    	for(var flag in flags)
+    	{
+    	    flag = flags[flag]
+    		var creeps = flag.room.find(FIND_MY_CREEPS, {filter:{role:"warrior",post: flag}})
+    		if(creeps.length < warriors/flags.length){target = flag; break;}
+    	} 
+    	spawn1.createCreep(warriorBody,undefined,{role:"warrior",post:target,task:"waiting"})
+    }
+	else if(Memory.workers < workers ){
 	    var index = Memory.curSource;
 	    console.log(Memory.curSource);
 	    console.log("Spawning worker for " + Memory.curSource);
