@@ -91,7 +91,7 @@ module.exports = function()
 
 	else if(Memory.couriers < couriers){
 	    console.log("Spawning courier");
-	    spawn1.createCreep(courierBody,undefined, {role:"courier", task:"coming"});
+	    spawn1.createCreep(courierBody,undefined, {role:"courier"});
 	}
 
 	else if(Memory.transfers < transfers){
@@ -105,7 +105,7 @@ module.exports = function()
                     
                 }})
 	     if(count.length <= eCount.length*.5){var task="extension"}
-	     else{var task ="source"}
+	     else{var task ="source"}	 
 	    spawn1.createCreep(transferBody,undefined, {role:"transfer", target:"none", task:task});
 	}
 

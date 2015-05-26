@@ -27,12 +27,19 @@ for(var name in Game.creeps) {
         totBuilders++;
     }
     else if(creep.memory.role == 'worker') {
+        if(creep.memory.target == undefined)creep.memory.source = Memory.safeSources[Memory.curSource];
         worker(creep);
         totWorkers++;
     }
     else if(creep.memory.role == 'transfer') {
         transfer(creep);
         totTransfer++;
+    }
+    else if(creep.memory.role == undefined)
+    {
+        creep.memory.role = "worker"
+        creep.memory.task = "coming"
+        creep.memory.target = Memory.safeSources[Memory.curSource];
     }
 }
 
