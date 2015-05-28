@@ -9,7 +9,7 @@ module.exports = function()
     var workers;
     var warriors;
     var medics;
-	var spawn1 = Game.spawns.Spawn1;
+	   var spawn1 = Game.spawns.Spawn1;
 	//Bodies
     var extensions = Game.spawns.Spawn1.room.find(FIND_MY_STRUCTURES, {filter:{structureType:"extension",energy:50}})
    if(Memory.totalEnergy >= 500)
@@ -108,10 +108,12 @@ module.exports = function()
     	    flag = flags[flag]
     		var creeps = flag.room.find(FIND_MY_CREEPS, {filter:{role:"warrior",post: flag}})
     		if(creeps.length < warriors/flags.length){target = flag; break;}
+
     	}
 
 	    console.log("Creating warrior for " + target.name);
     	spawn1.createCreep(warriorBody,undefined,{role:"warrior",post:target,task:"waiting",target:"none"})
+
     }
 	else if(Memory.workers < workers ){
 	    var index = Memory.curSource;

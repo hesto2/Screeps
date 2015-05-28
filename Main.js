@@ -14,6 +14,7 @@ var totWorkers =0;
 var totWarriors=0;
 Memory.totalEnergy = 0;
 Memory.energyCapacity = 0;
+
 var spawn1 = Game.spawns.Spawn1;
 Memory.totalEnergy += spawn1.energy
 //ADD SEPARATE MODULE JUST FOR SPAWN LOGIC AND ROLE ASSIGNMENT
