@@ -3,13 +3,13 @@ module.exports = function (creep) {
     {
         creep.memory.task = "controller";
     }
-    
+
     var spawn = Game.spawns.Spawn1;
     var ctrl = creep.room.controller;
-    var task = creep.memory.task;  
+    var task = creep.memory.task;
    // if(creep.memory.role == "controller")
     {
-        if(creep.energy == 0 )
+        if(creep.energy == 0 && Memory.workers > 1 && Memory.transfers > 1 )
         {
             creep.memory.task = "going";
             creep.moveTo(spawn);
@@ -25,12 +25,13 @@ module.exports = function (creep) {
             {
                 spawn.transferEnergy(creep);
             }
-        
+
             }
         else
-        {   
+        {
             creep.memory.task = "coming";
             creep.moveTo(ctrl);
+            var nearCreep = creep.pos.findClosest(FIND_MY_CREEPS, {filter:{role:"coureir",task:"working"}});
             creep.memory.task = "working";
             creep.upgradeController(ctrl);
         }
@@ -47,7 +48,7 @@ module.exports = function (creep) {
             var extension = creep.pos.findClosest(FIND_MY_STRUCTURES, {filter:
                 function(object){
                     return object.structureType == "extension" && object.energy < object.energyCapacity
-                    
+
                 }})
             creep.moveTo(extension);
             creep.transferEnergy(extension);

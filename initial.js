@@ -16,7 +16,7 @@
      var bottom = lair.pos.y + 6;
      var left = lair.pos.x - 6;
      var top = lair.pos.y - 6;
-     
+
      var indices = lair.room.lookForAtArea('source',top,left,bottom,right);
 
      var hit;
@@ -24,7 +24,7 @@
      {
          for(var y in indices[x])
          {
-             
+
              var target = indices[x][y];
              var index = sources.indexOf(target);
              if (index > -1) {
@@ -32,6 +32,6 @@
              }
          }
      }
-    count++; 
+    count++;
  }
  Memory.safeSources = sources;

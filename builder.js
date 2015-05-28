@@ -6,7 +6,7 @@
  * var mod = require('builder'); // -> 'a thing'
  */
  module.exports = function(creep){
-		if(creep.energy == 0 && Game.spawns.Spawn1.energy > 375) {
+		if(creep.energy == 0 && Memory.workers > 1 && Memory.transfers > 1 ) {
 			creep.moveTo(Game.spawns.Spawn1);
 			Game.spawns.Spawn1.transferEnergy(creep);
 		}
