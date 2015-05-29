@@ -8,40 +8,40 @@ module.exports = function(creep)
     }
     else
     {
-    	var target = creep.pos.findClosest(FIND_HOSTILE_CREEPS, {filter:function(object){
-    	    if(object.owner.username != "Source Keeper" && object.owner.username != "nuclearfalcon")
-    	    {
-    	        return object;
-    	    }
-    	}});
-    	if(target) {
-    	   creep.moveTo(target);
-
-    	   creep.attack(target);
-    	}
-    	else
-    	{
-    	    var target = creep.pos.findClosest(FIND_HOSTILE_STRUCTURES, {filter:function(object){
-
-    	    if(object.owner != undefined && object.owner.username != "Source Keeper" && object.owner.username != "nuclearfalcon")
-    	    {
-    	        return object;
-    	    }
-    	}});
+        var target = creep.pos.findClosest(FIND_HOSTILE_CREEPS, {filter:function(object){
+            if(object.owner.username != "Source Keeper" && object.owner.username != "nuclearfalcon")
+            {
+                return object;
+            }
+        }});
+        if(target) {
+           creep.moveTo(target);
+           
+           creep.attack(target);
+        }
+        else
+        {
+            var target = creep.pos.findClosest(FIND_HOSTILE_STRUCTURES, {filter:function(object){
+          
+            if(object.owner != undefined && object.owner.username != "Source Keeper" && object.owner.username != "nuclearfalcon")
+            {
+                return object;
+            }
+        }});
             if(target)
             {
                 creep.moveTo(target);
                 creep.attack(target);
 
             }
-        	else
-        	{
+            else
+            {
 
-        		var post = creep.memory.post
-        		post = Game.getObjectById(post.id)
-        		creep.moveTo(post)
-        	}
-    	}
+                var post = creep.memory.post
+                post = Game.getObjectById(post.id)
+                creep.moveTo(post)
+            }
+        }
     }
     if(creep.energy < creep.energyCapacity)
     {

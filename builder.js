@@ -16,5 +16,15 @@
 				creep.moveTo(targets[0]);
 				creep.build(targets[0]);
 			}
+			else
+			{
+			    targets = creep.room.find(FIND_MY_STRUCTURES,{filter:function(object)
+        	    {
+        	        if(object.hits < object.hitsMax)returnObject
+        	    }
+        	    })
+        	    creep.moveTo(targets[0]);
+				creep.repair(targets[0]);
+			}
 		}
  }
