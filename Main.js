@@ -52,7 +52,7 @@ for(var name in Game.creeps) {
     {
         creep.memory.role = "worker"
         creep.memory.task = "coming"
-        creep.memory.target = Memory.safeSources[Memory.curSource];
+        creep.memory.target = creep.pos.findClosest(FIND_SOURCES)
     }
     else if(creep.memory.role == "warrior")
     {
@@ -67,7 +67,14 @@ Memory.builders = totBuilders;
 Memory.workers = totWorkers;
 Memory.transfers = totTransfer;
 Memory.warriors = totWarriors;
-spawn();
+if(Game.spawns.Spawn1.room.name == "sim")
+{
+    return;
+}
+else
+{
+    spawn();
+}
 //construct();
 
 

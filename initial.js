@@ -9,7 +9,7 @@
 
  Memory.curSource = 0;
  Memory.safeSources = 0;
-if(Game.spawns.Spawn1.room.name = "sim"){Memory.safeSources= Game.spawns.Spawn1.room.find(FIND_SOURCES);return;}
+if(Game.spawns.Spawn1.room.name == "sim"){Memory.safeSources= Game.spawns.Spawn1.room.find(FIND_SOURCES);return;}
 var spawn = Game.spawns.Spawn1;
  var sources = spawn.room.find(FIND_SOURCES);
  var lairs = spawn.room.find(FIND_HOSTILE_STRUCTURES);
