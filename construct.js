@@ -7,7 +7,7 @@
  */
  module.exports=function()
  {
-     
+
      var spawn = Game.spawns.Spawn1
      var futureSites = [
          spawn.room.getPositionAt(11,19),

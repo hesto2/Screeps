@@ -23,13 +23,13 @@
         	}});
         	if(target) {
         	   creep.moveTo(target);
-        	   
+
         	   creep.attack(target);
         	}
         	else
         	{
         	    var target = creep.pos.findClosest(FIND_HOSTILE_STRUCTURES, {filter:function(object){
-        	  
+
         	    if(object.owner != undefined && object.owner.username != "Source Keeper" && object.owner.username != "nuclearfalcon")
         	    {
         	        return object;
@@ -39,11 +39,11 @@
                 {
                     creep.moveTo(target);
                     creep.attack(target);
-    
+
                 }
             	else
             	{
-    
+
             		var post = creep.memory.post
             		post = Game.getObjectById(post.id)
             		creep.moveTo(post)
