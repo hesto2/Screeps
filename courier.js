@@ -1,10 +1,7 @@
 module.exports = function (creep) {
-    if(creep.memory.task == "spawn")
-    {
-        creep.memory.task = "controller";
-    }
 
-    var spawn = Game.spawns.Spawn1;
+  var spawn = creep.memory.home
+  spawn = Game.getObjectById(spawn.id)
     var ctrl = creep.room.controller;
     var task = creep.memory.task;
    // if(creep.memory.role == "controller")

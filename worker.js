@@ -1,5 +1,6 @@
 module.exports = function (creep) {
-
+	var spawn = creep.memory.home
+	spawn = Game.getObjectById(spawn.id)
         var sources = creep.memory.target
             //sources = Game.getObjectById(sources["id"])
         if(sources == undefined || sources == 1)
@@ -59,9 +60,8 @@ module.exports = function (creep) {
                     creep.memory.task = "meeting"
                 }
                 creep.memory.task = "going";
-                creep.moveTo(Game.spawns.Spawn1);
-                creep.transferEnergy(Game.spawns.Spawn1)
-
+  			        creep.moveTo(spawn);
+  	            creep.transferEnergy(spawn)
             }
 
 

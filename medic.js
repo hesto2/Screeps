@@ -24,7 +24,7 @@
         	if(target) {
         	   creep.moveTo(target);
 
-        	   creep.attack(target);
+        	   creep.heal(target);
         	}
         	else
         	{

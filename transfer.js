@@ -1,6 +1,7 @@
 module.exports = function(creep)
 {
-	var spawn = Game.spawns.spawn1;
+	var spawn = creep.memory.home
+	spawn = Game.getObjectById(spawn.id)
 
 
 		if(creep.energy < .45*creep.energyCapacity)
@@ -9,8 +10,8 @@ module.exports = function(creep)
 			if(creep.memory.target == "none" || creep.memory.target == undefined || creep.memory.target.name == creep.name)
 			{
 
-				target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){if(object.memory.role =="worker" && object.memory.task == "going")return object;}})
-				if(target)
+				target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){if(object.memory.role =="worker" && object.memory.task == "going" && object.memory.home.id == creep.memory.home.id)return object;}})
+				if(target)a
 				{
 	    			creep.memory.target = target;
 	    			target.memory.task = "meeting";
@@ -18,7 +19,7 @@ module.exports = function(creep)
 				}
 				else
 				{
-				    target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){if(object.memory.role =="worker" && object.memory.task == "working")return object;}})
+				    target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){if(object.memory.role =="worker" && object.memory.task == "working" && object.memory.home.id == creep.memory.home.id)return object;}})
 				    creep.moveTo(target);
 				}
 
@@ -54,7 +55,7 @@ module.exports = function(creep)
 		{
 			creep.memory.target = "none";
 
-			if(Game.spawns.Spawn1.energy >= .95*Game.spawns.Spawn1.energyCapacity)
+			if(spawn.energy >= .95*spawn.energyCapacity)
 			    {
 			        //console.log("SPAWN REACHING CAPACITY, MOVING TO HELP COURIERS")
 			        var target = creep.pos.findClosest(FIND_MY_STRUCTURES, {filter:function(object){if(object.structureType =="extension" && object.energy < object.energyCapacity)return object;}})
@@ -68,8 +69,8 @@ module.exports = function(creep)
 			    }
 		    else
 			    {
-			        creep.moveTo(Game.spawns.Spawn1);
-	                creep.transferEnergy(Game.spawns.Spawn1)
+			        creep.moveTo(spawn);
+	                creep.transferEnergy(spawn)
 			    }
 
 		}
