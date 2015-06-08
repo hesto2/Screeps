@@ -153,7 +153,7 @@ module.exports = function()
 
        	    var target = room.memory.safeSources[index];
        	    var result = spawn.createCreep(workerBody,undefined, {role:"worker",target:target,task:"coming",home:spawn});
-             if(result == 0){
+             if(typeof(result == 'string')){
                room.memory.curSource++;
          	    if(room.memory.curSource == room.memory.safeSources.length){room.memory.curSource = 0}
              }
