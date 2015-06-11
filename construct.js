@@ -9,6 +9,14 @@
  {
 
      var spawn = Game.spawns.Spawn1
+     var safeSources = spawn.room.memory.safeSources
+     for(var source in safeSources)
+     {
+       source = safeSources[source];
+       var path = spawn.pos.findPathTo(source.pos,{ignoreCreeps:true});
+       console.log(path)
+     }
+     /*
      var futureSites = [
          spawn.room.getPositionAt(11,19),
          spawn.room.getPositionAt(11,20),
@@ -32,4 +40,7 @@
          console.log(futureSites[index])
          spawn.room.createConstructionSite(futureSites[index], "extension");
      }
+     */
+
+
  }

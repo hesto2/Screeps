@@ -1,4 +1,3 @@
-
 module.exports = function()
 {
   for(var room in Memory.rooms)
@@ -23,7 +22,11 @@ module.exports = function()
      var warriors;
      var medics;
 
-     var squads;
+     //Builders
+     var buildings;
+     var roads;
+     var ramparts;
+     var construction
 
      var Tbuilders= Memory.builders //countType(room,"builder");
      var Ttransfers= countType(room,"transfer");
@@ -33,13 +36,7 @@ module.exports = function()
      var Twarriors= countType(room,"warrior");
      var Tmedics= countType(room,"medic");
 
-
      var sSources = room.memory.safeSources.length
-
-     /* Squad - 4 warriors
-                2 Medics
-                4 Ranged
-     */
 
        //Bodies
 
@@ -50,7 +47,6 @@ module.exports = function()
           var courierBody = [WORK,WORK,WORK,WORK,WORK,WORK,CARRY,WORK,MOVE,MOVE,MOVE];
           var warriorBody = [TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
           var builderBody = [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE];
-          var medicBody = [HEAL,HEAL,HEAL,MOVE,MOVE,MOVE]
         }
       else if(roomEnergy >= 700)
        {
@@ -88,22 +84,29 @@ module.exports = function()
        if(roomEnergy > 1100)
          {
              workers = 3 * sSources + 1
-             warriors = 5;
+             warriors = 12;
              couriers = 3;
              builders = 2;
-             squads = 1;
+             transfers = workers+4;
+
+       }
+       else if(roomEnergy > 1100)
+         {
+             workers = 3 * sSources
+             warriors = 12;
+             couriers = 3;
+             builders = 2;
              transfers = workers+4;
 
        }
        else if(roomEnergy > 950)
          {
              workers = 3 * sSources
-             warriors = 5;
+             warriors = 12;
              couriers = 3;
              builders = 2;
              roads = 1;
              ramparts = 1;
-             squads = 1;
              transfers = workers+4;
 
        }
@@ -114,11 +117,10 @@ module.exports = function()
            couriers = 3;
            builders = 2;
            roads = 1;
-           squads = 0;
            transfers = workers+4;
            if(Tworkers > 6 && Ttransfers > 9 && Tcouriers > 2)
            {
-               warriors = 5;
+               warriors = 10;
            }
      }
      else if(roomEnergy > 525)
@@ -144,6 +146,7 @@ module.exports = function()
          builders = 1;
          transfers = workers
      }
+
      if(room.name == "E1S2"){workers = 1; transfers = 2 }
 //SPAWN LOGIC
 
@@ -152,7 +155,7 @@ module.exports = function()
      {
        var spawn = spawns[spawn];
        if(spawn.spawning != null )continue;
-       var Tsquads = checkSquads();
+
 
 
        	if(Tworkers < workers ){
@@ -181,8 +184,7 @@ module.exports = function()
               else{var task ="source"}
              spawn.createCreep(transferBody,undefined, {role:"transfer", target:"none", task:task,home:spawn});
          }
-         checkSquads(spawn,squads)
-         if(Twarriors < warriors)
+         else if(Twarriors < warriors)
          {
            var flags = spawn.room.find(FIND_FLAGS, {filter:{color:COLOR_RED}})
 
@@ -206,9 +208,38 @@ module.exports = function()
 
 
 
-       	else if(Tbuilders < builders && (spawn.room.find(FIND_CONSTRUCTION_SITES).length|| Game.flags.bMove != undefined || roomEnergy >= 700)) {
-       	    //console.log("Spawning builder");
-       	    //spawn.createCreep(builderBody,undefined, {role:"builder", home:spawn});
+       	else if(Tbuilders < builders && (spawn.room.find(FIND_CONSTRUCTION_SITES).length|| Game.flags.bMove != undefined || roomEnergy >= 700)){
+       	    console.log("Spawning builder");
+       	    var tConstruction = 0 ;
+       	    var tRamparts = 0;
+       	    var tBuildings = 0;
+       	    var tRoads = 0;
+
+       	    var task; // construction, ramparts, buildings, roads
+       	    spawn.room.find(FIND_MY_CREEPS, {filter:
+                           function(object){
+                               if(object.memory.role =="builder" ){
+                                   if(object.memory.task == "construction"){
+                                        tConstruction++;
+                                   }
+                                   else if(object.memory.task == "ramparts"){
+                                       tRamparts++;
+                                   }
+                                   else if(object.memory.task == "buildings"){
+                                       tBuildings++;
+                                   }
+                                   else if(object.memory.task == "roads"){
+                                       tRoads++;
+                                   }
+                               }
+                           }
+                       });
+            if(tConstruction < construction)task = "construction";
+            else if(tRoads < roads)task = "roads";
+            else if(tRamparts < ramparts)task = "ramparts";
+
+
+       	    //spawn.createCreep(builderBody,undefined, {role:"builder", home:spawn, target: "none",task:task});
        	}
      }
    }
@@ -276,59 +307,4 @@ function getSafeSources(room)
       count++;
    }
    return sources;
-}
-function checkSquads(spawn,squads){
-  medicBody = [HEAL,HEAL,HEAL,MOVE,MOVE,MOVE]
-  meleeBody = [TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]
-  rangedBody = [RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]
-
-  var sCreeps = Memory.squads;
-  for(var i=1;i<=squads;i++)
-  {
-
-    var medic = 0;
-    var ranged = 0;
-    var melee = 0;
-    for(var creep in sCreeps)
-    {
-        creep = sCreeps[creep]
-      if(creep.memory.squad == i)
-      {
-        var task = creep.memory.task;
-        if(task == "melee")melee++;
-        else if(task == "ranged")ranged++;
-        else if(task == "medic")medic++;
-      }
-    }
-
-    //Spawn LOGIC
-    if(medic < 2){
-      if(spawn.canCreateCreep(medicBody) == OK){
-        console.log("spawning medic")
-        spawn.createCreep(medicBody,undefined,{role:"squad",task:"medic",target:"none",squad:i})
-
-
-      }
-    }
-    else if(melee < 4){
-      if(spawn.canCreateCreep(meleeBody) == OK){
-        console.log("spawning melee")
-        spawn.createCreep(meleeBody,undefined,{role:"squad",task:"melee",target:"none",squad:i})
-      }
-    }
-    else if(ranged < 4){
-      if(spawn.canCreateCreep(rangedBody) == OK){
-        console.log("spawning ranged")
-        spawn.createCreep(rangedBody,undefined,{role:"squad",task:"ranged",target:"none",squad:i})
-      }
-    }
-
-
-  }
-  //Check each role in the squad and get a count of what is in it.
-
-  //If there is a deficiency, spawn whatever is defficient.
-}
-function spawnSquads(spawn, role){
-   //Spawn based on role
 }
