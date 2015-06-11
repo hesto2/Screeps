@@ -90,15 +90,6 @@ module.exports = function()
              transfers = workers+4;
 
        }
-       else if(roomEnergy > 1100)
-         {
-             workers = 3 * sSources
-             warriors = 12;
-             couriers = 3;
-             builders = 2;
-             transfers = workers+4;
-
-       }
        else if(roomEnergy > 950)
          {
              workers = 3 * sSources

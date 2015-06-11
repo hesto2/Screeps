@@ -302,10 +302,10 @@ function checkSquads(spawn,squads){
     }
 
     //Spawn LOGIC
-    if(medic < 2){
+    if(medic < 3){
       if(spawn.canCreateCreep(medicBody) == OK){
         console.log("spawning medic")
-        spawn.createCreep(medicBody,undefined,{role:"squad",task:"medic",target:"none",squad:i})
+        spawn.createCreep(medicBody,undefined,{role:"squad",task:"medic",target:"none",status:"none",squad:i})
 
 
       }
@@ -313,13 +313,13 @@ function checkSquads(spawn,squads){
     else if(melee < 4){
       if(spawn.canCreateCreep(meleeBody) == OK){
         console.log("spawning melee")
-        spawn.createCreep(meleeBody,undefined,{role:"squad",task:"melee",target:"none",squad:i})
+        spawn.createCreep(meleeBody,undefined,{role:"squad",task:"melee",target:"none",status:"none",squad:i})
       }
     }
     else if(ranged < 4){
       if(spawn.canCreateCreep(rangedBody) == OK){
         console.log("spawning ranged")
-        spawn.createCreep(rangedBody,undefined,{role:"squad",task:"ranged",target:"none",squad:i})
+        spawn.createCreep(rangedBody,undefined,{role:"squad",task:"ranged",target:"none",status:"none",squad:i})
       }
     }
 

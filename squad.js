@@ -1,3 +1,6 @@
+var medic = require("squadMedic")
+var melee = require("squadMelee")
+var ranged = require("squadRanged")
 module.exports = function(creep){
 
 	//ASSIGN FLAG TO CREEP
@@ -56,7 +59,17 @@ module.exports = function(creep){
 		}
 	}
 
-	creep.moveTo(flag);
+console.log(flag)
+	//Role performance
+	if(creep.memory.task == "melee"){
+		melee(creep,flag)
+	}
+	else if(creep.memory.task == "ranged"){
+		ranged(creep,flag)
+	}
+	else if(creep.memory.task == "medic"){
+		medic(creep,flag)
+	}
 
 
 }
