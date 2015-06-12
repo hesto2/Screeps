@@ -22,16 +22,19 @@ module.exports = function()
      var workers;
      var warriors;
      var medics;
-
+     var keeperKillers = 0;
+     var kMedics = 0;
      var squads;
 
-     var Tbuilders= Memory.builders //countType(room,"builder");
+     var Tbuilders= countType(room,"builder");
      var Ttransfers= countType(room,"transfer");
      var Tcouriers= countType(room,"courier");
      var Tbuilders= countType(room,"builder");
      var Tworkers= countType(room,"worker");
      var Twarriors= countType(room,"warrior");
      var Tmedics= countType(room,"medic");
+     var TkeeperKillers = countType(room,"keeperKiller")
+     var TkMedics = countType(room,"kMedic")
 
 
      var sSources = room.memory.safeSources.length
@@ -42,7 +45,8 @@ module.exports = function()
      */
 
        //Bodies
-
+       var keeperKillerBody = [TOUGH,TOUGH,MOVE,MOVE,MOVE,MOVE,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK]
+       var kMedicBody = [MOVE,MOVE,MOVE,HEAL,HEAL,HEAL,HEAL]
        if(roomEnergy >= 900)
         {
           var workerBody = [WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE];
@@ -93,6 +97,8 @@ module.exports = function()
              builders = 2;
              squads = 1;
              transfers = workers+4;
+             keeperKillers = 1;
+             kMedics = 2
 
        }
        else if(roomEnergy > 950)
@@ -105,7 +111,8 @@ module.exports = function()
              ramparts = 1;
              squads = 1;
              transfers = workers+4;
-
+             keeperKillers = 1;
+             kMedics = 2
        }
      else if(roomEnergy > 700)
        {
@@ -116,6 +123,8 @@ module.exports = function()
            roads = 1;
            squads = 0;
            transfers = workers+4;
+           keeperKillers = 0;
+           kMedics = 0;
            if(Tworkers > 6 && Ttransfers > 9 && Tcouriers > 2)
            {
                warriors = 5;
@@ -144,6 +153,7 @@ module.exports = function()
          builders = 1;
          transfers = workers
      }
+     warriors = 0
      if(room.name == "E1S2"){workers = 1; transfers = 2 }
 //SPAWN LOGIC
 
@@ -157,7 +167,7 @@ module.exports = function()
 
        	if(Tworkers < workers ){
        	    var index = room.memory.curSource;
-       	    console.log("Spawning worker for " + room.memory.curSource);
+       	    console.log(spawn.name + " Spawning worker for " + room.memory.curSource);
 
        	    var target = room.memory.safeSources[index];
        	    var result = spawn.createCreep(workerBody,undefined, {role:"worker",target:target,task:"coming",home:spawn});
@@ -168,7 +178,7 @@ module.exports = function()
        	}
 
        else if(Ttransfers < transfers){
-             console.log("Spawning Transfer");
+             console.log(spawn.name + " Spawning Transfer");
               var count = spawn.room.find(FIND_MY_CREEPS, {filter:
                            function(object){
                                if(object.memory.role =="transfer" && object.memory.task == "extension")return object;}})
@@ -180,6 +190,14 @@ module.exports = function()
               if(count.length <= eCount.length*.5){var task="extension"}
               else{var task ="source"}
              spawn.createCreep(transferBody,undefined, {role:"transfer", target:"none", task:task,home:spawn});
+         }
+         else if(TkeeperKillers < keeperKillers) {
+             console.log(spawn.name + " Spawning KeeperKiller");
+             spawn.createCreep(keeperKillerBody,undefined, {role:"keeperKiller", home:spawn, task:"none"});
+         }
+         else if(TkMedics < kMedics) {
+             console.log(spawn.name + " Spawning kMedics");
+             spawn.createCreep(kMedicBody,undefined, {role:"kMedic", home:spawn, task:"none"});
          }
          checkSquads(spawn,squads)
          if(Twarriors < warriors)
@@ -199,16 +217,16 @@ module.exports = function()
            spawn.createCreep(warriorBody,undefined,{role:"warrior",post:target,task:"waiting",target:"none"})
          }
        	else if(Tcouriers < couriers){
-       	    console.log("Spawning courier");
+       	    console.log(spawn.name + " Spawning courier");
        	    console.log(Tcouriers + " " + couriers)
        	    spawn.createCreep(courierBody,undefined, {role:"courier",home:spawn});
        	}
 
 
 
-       	else if(Tbuilders < builders && (spawn.room.find(FIND_CONSTRUCTION_SITES).length|| Game.flags.bMove != undefined || roomEnergy >= 700)) {
-       	    //console.log("Spawning builder");
-       	    //spawn.createCreep(builderBody,undefined, {role:"builder", home:spawn});
+       	else if(Tbuilders < builders && (spawn.room.find(FIND_CONSTRUCTION_SITES).length)) {
+       	    console.log(spawn.name + " Spawning builder");
+       	    spawn.createCreep(builderBody,undefined, {role:"builder", home:spawn, task:"none"});
        	}
      }
    }
@@ -304,7 +322,7 @@ function checkSquads(spawn,squads){
     //Spawn LOGIC
     if(medic < 3){
       if(spawn.canCreateCreep(medicBody) == OK){
-        console.log("spawning medic")
+        console.log(spawn.name + " Spawning medic")
         spawn.createCreep(medicBody,undefined,{role:"squad",task:"medic",target:"none",status:"none",squad:i})
 
 
@@ -312,13 +330,13 @@ function checkSquads(spawn,squads){
     }
     else if(melee < 4){
       if(spawn.canCreateCreep(meleeBody) == OK){
-        console.log("spawning melee")
+        console.log(spawn.name + " Spawning melee")
         spawn.createCreep(meleeBody,undefined,{role:"squad",task:"melee",target:"none",status:"none",squad:i})
       }
     }
     else if(ranged < 4){
       if(spawn.canCreateCreep(rangedBody) == OK){
-        console.log("spawning ranged")
+        console.log(spawn.name + " Spawning ranged")
         spawn.createCreep(rangedBody,undefined,{role:"squad",task:"ranged",target:"none",status:"none",squad:i})
       }
     }

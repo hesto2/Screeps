@@ -3,7 +3,7 @@ module.exports = function(creep, flag){
 		creep.moveTo(flag)
 	}
 	else if(flag.color == COLOR_RED){
-
+        attack(creep,flag)
 	}
 	else if(flag.color == COLOR_YELLOW){
 
@@ -35,7 +35,7 @@ function rally(creep,flag){
 		}});
 		if(target == undefined){
 			creep.moveTo(flag)
-			creep.memory.target == "none"
+			creep.memory.target = "none"
 		}
 		else{
 			var targets = creep.pos.findInRange(target, 3);
@@ -48,4 +48,45 @@ function rally(creep,flag){
 
 
 		}
+}
+function attack(creep,flag){
+    if(creep.room != flag.room)
+    {
+        creep.moveTo(flag);
+    }
+    else
+    {
+    	var target = creep.pos.findClosest(FIND_HOSTILE_CREEPS, {filter:function(object){
+    	    if(object.owner.username != "Source Keeper" /*&& object.owner.username != "nuclearfalcon"*/)
+    	    {
+    	        return object;
+    	    }
+    	}});
+
+    	if(target) {
+    	   creep.moveTo(target);
+    	   creep.rangedAttack(target);
+    	}
+    	else
+    	{
+    	    var target = creep.pos.findClosest(FIND_HOSTILE_STRUCTURES, {filter:function(object){
+
+    	    if(object.owner != undefined && object.owner.username != "Source Keeper" /*&& object.owner.username != "nuclearfalcon"*/)
+    	    {
+    	        return object;
+    	    }
+    	}});
+            if(target)
+            {
+                creep.moveTo(target);
+                creep.rangedAttack(target);
+
+            }
+        	else
+        	{
+
+        		creep.moveTo(flag)
+        	}
+    	}
+    }
 }

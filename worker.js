@@ -26,11 +26,6 @@ module.exports = function (creep) {
             }
         }
         else {
-            var nearby = creep.pos.findInRange(FIND_MY_CREEPS,1,{task:"coming"})
-            for(var x in nearby)
-            {
-                nearby[x].move(TOP_RIGHT);
-            }
 
             if(creep.memory.task == "meeting")
             {
@@ -62,6 +57,13 @@ module.exports = function (creep) {
                 creep.memory.task = "going";
   			        creep.moveTo(spawn);
   	            creep.transferEnergy(spawn)
+  	            var transfer = creep.pos.findClosest(FIND_MY_CREEPS, {filter:
+                    function(object){
+                        if(object.memory.role =="transfer")return object;}})
+                    if(creep.pos.isNearTo(transfer))
+                    {
+                        creep.transferEnergy(transfer);
+                    }
             }
 
 

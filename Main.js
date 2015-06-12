@@ -6,6 +6,9 @@ var transfer = require("transfer");
 var warrior = require("warrior");
 var construct = require("construct");
 var squad = require("squad");
+var keeperKiller = require("keeperKiller");
+var kMedic = require("kMedic");
+
 for(var i in Memory.creeps) {
     if(!Game.creeps[i]) {
         delete Memory.creeps[i];
@@ -76,6 +79,12 @@ for(var i in Memory.creeps) {
         {
             warrior(creep);
             totWarriors++;
+        }
+        else if(creep.memory.role == "keeperKiller"){
+          keeperKiller(creep);
+        }
+        else if(creep.memory.role == "kMedic"){
+          kMedic(creep);
         }
     }
 

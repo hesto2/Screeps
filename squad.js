@@ -59,7 +59,6 @@ module.exports = function(creep){
 		}
 	}
 
-console.log(flag)
 	//Role performance
 	if(creep.memory.task == "melee"){
 		melee(creep,flag)
