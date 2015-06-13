@@ -9,6 +9,15 @@ module.exports = function (creep) {
         if(creep.energy == 0 && Memory.workers > 1 && Memory.transfers > 1 )
         {
             creep.memory.task = "going";
+            var link = creep.room.controller.pos.findClosest(FIND_MY_STRUCTURES,{filter:{structureType:STRUCTURE_LINK}})
+
+            if(link != undefined)
+            if(creep.room.controller.pos.getRangeTo(link) < 5){
+                creep.moveTo(link);
+                link.transferEnergy(creep);
+                return;
+            }
+
             creep.moveTo(spawn);
             if(Memory.totalEnergy < 500)
             {

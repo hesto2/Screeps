@@ -8,7 +8,7 @@ var construct = require("construct");
 var squad = require("squad");
 var keeperKiller = require("keeperKiller");
 var kMedic = require("kMedic");
-
+var linkWorker = require("linkWorker");
 for(var i in Memory.creeps) {
     if(!Game.creeps[i]) {
         delete Memory.creeps[i];
@@ -61,20 +61,6 @@ for(var i in Memory.creeps) {
             transfer(creep);
             totTransfer++;
         }
-        else if(creep.memory.role == undefined)
-        {
-            if(Game.spawns.Spawn1.room.mode == MODE_SIMULATION)
-            {
-
-            }
-            else
-            {
-                creep.memory.role = "worker"
-                creep.memory.task = "coming"
-                creep.memory.target = creep.pos.findClosest(FIND_SOURCES)
-            }
-
-        }
         else if(creep.memory.role == "warrior")
         {
             warrior(creep);
@@ -85,6 +71,9 @@ for(var i in Memory.creeps) {
         }
         else if(creep.memory.role == "kMedic"){
           kMedic(creep);
+        }
+        else if(creep.memory.role == "linkWorker"){
+          linkWorker(creep);
         }
     }
 
@@ -98,6 +87,13 @@ for(var i in Memory.creeps) {
 
     if(Game.spawns.Spawn1.room.name == "sim")
     {
+        Game.creeps.test.memory.role = "keeperKiller"
+        Game.creeps.test1.memory.role = "kMedic"
+        Game.creeps.test2.memory.role = "kMedic"
+        keeperKiller(Game.creeps.test)
+        kMedic(Game.creeps.test1)
+        kMedic(Game.creeps.test2)
+
         return;
     }
     else

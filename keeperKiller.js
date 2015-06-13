@@ -17,6 +17,7 @@ module.exports = function(creep){
 					}
 				}})
 
+				if(enemy != null)
         if(creep.pos.inRangeTo(enemy,3)){
             creep.rangedAttack(enemy)
             return
@@ -27,6 +28,9 @@ module.exports = function(creep){
 
     }
     else{
-
+				if(medics.length > 0)
+				if(creep.pos.getRangeTo(medics[0])>10){
+					creep.moveTo(medics[[0]])
+				}
     }
 }
