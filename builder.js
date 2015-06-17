@@ -1,12 +1,17 @@
 module.exports = function(creep){
     var spawn = creep.memory.home
 	spawn = Game.getObjectById(spawn.id)
-		if(creep.energy == 0 && Memory.workers > 1 && Memory.transfers > 1 && Game.flags.bMove == undefined /*&& !(creep.pos.inRangeTo(creep.pos.findClosest(FIND_SOURCES),10))*/) {
+	//creep.moveTo(spawn);
+	//return
+	if(creep.energy == 0 && Memory.workers > 1 && Memory.transfers > 1 && Game.flags.bMove == undefined /*&& !(creep.pos.inRangeTo(creep.pos.findClosest(FIND_SOURCES),10))*/) {
+			if(room.energy <= 300)return;
 			creep.moveTo(spawn);
+
 			spawn.transferEnergy(creep);
 		}
-		else if((creep.energy == 0 || creep.memory.task == "harvest") && Game.flags.bMove != undefined ){
-		        var target = creep.pos.findClosest(getSafeSources(Game.flags.bMove.room));
+		else if((creep.energy == 0 || creep.memory.task == "harvest")/* && Game.flags.bMove != undefined*/ ){
+		        //var target = creep.pos.findClosest(getSafeSources(Game.flags.bMove.room));
+		        var target = creep.pos.findClosest(FIND_SOURCES);
 		        creep.moveTo(target)
 		        creep.harvest(target);
 		        if(creep.energy == creep.energyCapacity){
@@ -43,24 +48,12 @@ module.exports = function(creep){
 		    creep.build(targets[0])
 
 		    }
-      else{
-        if(creep.memory.target == "none" || creep.memory.target == undefined){
-
-          targets = creep.room.find(FIND_MY_STRUCTURES, {filter: function(object){
-            if(object.hits < object.hitsMax *.5)return object;
-          }})
-          creep.memory.target == targets[0]
+        else{
+            creep.memory.role = "worker";
+            creep.memory.task = 'going';
+            creep.memory.target = creep.room.memory.safeSources[0]
         }
-        else {
-          {
 
-            var target = creep.memory.target
-            creep.moveTo(target)
-            creep.repair(target)
-            if(target.hits == target.hitsMax){creep.memory.target == "none"}
-          }
-        }
-      }
 
 		}
  }

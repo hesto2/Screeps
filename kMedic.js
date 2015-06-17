@@ -5,12 +5,12 @@ spawn = Game.getObjectById(spawn.id)
 	    if(object.memory.role == "keeperKiller")return object;
 	}})
 	//console.log(target)
-	if(target != undefined){
+	if(target != null){
 	        creep.moveTo(target)
 	        creep.heal(target)
 	    }
 			else{
-				creep.moveTo(spawn)
+			    creep.moveTo(spawn)
 			}
 
 }

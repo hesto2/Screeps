@@ -1,3 +1,4 @@
+
 module.exports = function(creep)
 {
     var attackFlag = Game.flags.Attack
@@ -14,11 +15,12 @@ module.exports = function(creep)
     else
     {
     	var target = creep.pos.findClosest(FIND_HOSTILE_CREEPS, {filter:function(object){
-    	    if(object.owner.username != "Source Keeper" && object.owner.username != "nuclearfalcon")
+    	    if(object.owner.username != "Source Keeper" /*&& object.owner.username != "nuclearfalcon"*/)
     	    {
     	        return object;
     	    }
     	}});
+
     	if(target) {
     	   creep.moveTo(target);
 
@@ -28,7 +30,7 @@ module.exports = function(creep)
     	{
     	    var target = creep.pos.findClosest(FIND_HOSTILE_STRUCTURES, {filter:function(object){
 
-    	    if(object.owner != undefined && object.owner.username != "Source Keeper" && object.owner.username != "nuclearfalcon")
+    	    if(object.owner != undefined && object.owner.username != "Source Keeper" /*&& object.owner.username != "nuclearfalcon"*/)
     	    {
     	        return object;
     	    }

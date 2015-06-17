@@ -1,6 +1,8 @@
 module.exports = function(creep, flag){
 	if(flag.color == COLOR_CYAN){
+
 		creep.moveTo(flag)
+
 	}
 	else if(flag.color == COLOR_RED){
         attack(creep,flag)
@@ -25,10 +27,16 @@ module.exports = function(creep, flag){
 		rally(creep,flag)
 	}
 
+	if(Game.flags.ranged != undefined)
+        {
+            creep.moveTo(Game.flags.ranged)
+            console.log("XXXXXXXXXX")
+        }
+
 }
 function rally(creep,flag){
 	var target = creep.pos.findClosest(FIND_HOSTILE_CREEPS, {filter:function(object){
-			if(object.owner.username != "Source Keeper" && object.owner.username != "nuclearfalcon")
+			if(object.owner.username != "Source Keeper" && object.owner.username != "ultramixerman")
 			{
 					return object;
 			}
@@ -53,11 +61,12 @@ function attack(creep,flag){
     if(creep.room != flag.room)
     {
         creep.moveTo(flag);
+        console.log("TEST")
     }
     else
     {
     	var target = creep.pos.findClosest(FIND_HOSTILE_CREEPS, {filter:function(object){
-    	    if(object.owner.username != "Source Keeper" /*&& object.owner.username != "nuclearfalcon"*/)
+    	    if(object.owner.username != "Source Keeper" && object.owner.username != "ultramixerman")
     	    {
     	        return object;
     	    }
@@ -71,7 +80,7 @@ function attack(creep,flag){
     	{
     	    var target = creep.pos.findClosest(FIND_HOSTILE_STRUCTURES, {filter:function(object){
 
-    	    if(object.owner != undefined && object.owner.username != "Source Keeper" /*&& object.owner.username != "nuclearfalcon"*/)
+    	    if(object.owner != undefined && object.owner.username != "Source Keeper" && object.owner.username != "ultramixerman" && object.structureType != STRUCTURE_CONTROLLER)
     	    {
     	        return object;
     	    }
@@ -84,7 +93,7 @@ function attack(creep,flag){
             }
         	else
         	{
-
+console.log("XXXXXXX" + target)
         		creep.moveTo(flag)
         	}
     	}

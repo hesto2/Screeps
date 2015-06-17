@@ -6,12 +6,12 @@ module.exports = function (creep) {
     var task = creep.memory.task;
    // if(creep.memory.role == "controller")
     {
-        if(creep.energy == 0 && Memory.workers > 1 && Memory.transfers > 1 )
+        if(creep.energy == 0)
         {
             creep.memory.task = "going";
-            var link = creep.room.controller.pos.findClosest(FIND_MY_STRUCTURES,{filter:{structureType:STRUCTURE_LINK}})
+            var link = creep.room.controller.pos.findClosest(FIND_MY_STRUCTURES,{filter:{structureType:STRUCTURE_LINK},algorithm:"astar",maxOps:50})
 
-            if(link != undefined)
+            if(link != null)
             if(creep.room.controller.pos.getRangeTo(link) < 5){
                 creep.moveTo(link);
                 link.transferEnergy(creep);
@@ -21,7 +21,7 @@ module.exports = function (creep) {
             creep.moveTo(spawn);
             if(Memory.totalEnergy < 500)
             {
-                spawn.transferEnergy(creep,25);
+                spawn.transferEnergy(creep,50);
             }
             else if(Memory.totalEnergy < 100)
             {
@@ -37,7 +37,7 @@ module.exports = function (creep) {
         {
             creep.memory.task = "coming";
             creep.moveTo(ctrl);
-            var nearCreep = creep.pos.findClosest(FIND_MY_CREEPS, {filter:{role:"coureir",task:"working"}});
+            //var nearCreep = creep.pos.findClosest(FIND_MY_CREEPS, {filter:{role:"coureir",task:"working"}});
             creep.memory.task = "working";
             creep.upgradeController(ctrl);
         }

@@ -10,8 +10,8 @@ module.exports = function(creep){
 
 	medics = creep.pos.findInRange(medics,2)
     if( medics.length >=2){
-
-				var enemy = creep.pos.findClosest(FIND_HOSTILE_CREEPS, {filter:function(object){
+                var flag = Game.flags.keeperFlag;
+				var enemy = flag.pos.findClosest(FIND_HOSTILE_CREEPS, {filter:function(object){
 					if(object.owner.username == "Source Keeper"){
 						return object;
 					}
@@ -20,7 +20,7 @@ module.exports = function(creep){
 				if(enemy != null)
         if(creep.pos.inRangeTo(enemy,3)){
             creep.rangedAttack(enemy)
-            return
+            return;
         }
 
         creep.moveTo(enemy)

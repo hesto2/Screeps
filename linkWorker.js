@@ -1,4 +1,5 @@
 module.exports = function(creep){
+   //if(creep.room == Game.flags.test.room) creep.moveTo(Game.flags.test);return;
 	var target = creep.memory.target;
 	target = Game.getObjectById(target.id);
 

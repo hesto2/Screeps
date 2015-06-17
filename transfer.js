@@ -1,26 +1,30 @@
 module.exports = function(creep)
 {
+
 	var spawn = creep.memory.home
 	spawn = Game.getObjectById(spawn.id)
-
-
+    var room = Game.rooms[creep.memory.room.name]
+    var workers = room.memory.workers;
+    var couriers = room.memory.couriers;
 		if(creep.energy < .45*creep.energyCapacity)
 		{
 		    var target;
 			if(creep.memory.target == "none" || creep.memory.target == undefined || creep.memory.target.name == creep.name)
 			{
 
-				target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){if(object.memory.role =="worker" && object.memory.task == "going" && object.memory.home.id == creep.memory.home.id)return object;}})
-				if(target)a
+				target = creep.pos.findClosest(workers, {filter:function(object){if(object.memory.task == "going")return object;},algorithm:"dijkstra"})
+				if(target)
 				{
+				    creep.memory.task = "going to meet"
 	    			creep.memory.target = target;
 	    			target.memory.task = "meeting";
 
 				}
 				else
 				{
-				    target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){if(object.memory.role =="worker" && object.memory.task == "working" && object.memory.home.id == creep.memory.home.id)return object;}})
+				    target = creep.pos.findClosest(workers, {filter:function(object){if(object.memory.task == "working" )return object;},algorithm:"astar"})
 				    creep.moveTo(target);
+				    creep.memory.task = "going to working"
 				}
 
 
@@ -57,18 +61,21 @@ module.exports = function(creep)
 
 			if(spawn.energy >= .95*spawn.energyCapacity)
 			    {
+			        creep.memory.task = "going to extension"
 			        //console.log("SPAWN REACHING CAPACITY, MOVING TO HELP COURIERS")
-			        var target = creep.pos.findClosest(FIND_MY_STRUCTURES, {filter:function(object){if(object.structureType =="extension" && object.energy < object.energyCapacity)return object;}})
+			        var target = creep.pos.findClosest(FIND_MY_STRUCTURES, {filter:function(object){if(object.structureType =="extension" && object.energy < object.energyCapacity)return object;},algorithm:"astar"})
 			        //console.log(target)
+			        creep.memory.task = "going to courier"
 			        if(target == undefined || target == null)
 			        {
-			            target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){if(object.memory.role =="courier" && object.energy < object.energyCapacity)return object;}})
+			            target = creep.pos.findClosest(couriers, {filter:function(object){if(object.energy < object.energyCapacity)return object;},algorithm:"astar"})
 			        }
 			        creep.moveTo(target)
 			        creep.transferEnergy(target)
 			    }
 		    else
 			    {
+			        creep.memory.task = "going to spawn"
 			        creep.moveTo(spawn);
 	                creep.transferEnergy(spawn)
 			    }
