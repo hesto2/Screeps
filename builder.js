@@ -4,9 +4,7 @@ module.exports = function(creep){
 	//creep.moveTo(spawn);
 	//return
 	if(creep.energy == 0 && Memory.workers > 1 && Memory.transfers > 1 && Game.flags.bMove == undefined /*&& !(creep.pos.inRangeTo(creep.pos.findClosest(FIND_SOURCES),10))*/) {
-			if(room.energy <= 300)return;
 			creep.moveTo(spawn);
-
 			spawn.transferEnergy(creep);
 		}
 		else if((creep.energy == 0 || creep.memory.task == "harvest")/* && Game.flags.bMove != undefined*/ ){
