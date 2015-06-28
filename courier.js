@@ -1,7 +1,10 @@
 module.exports = function (creep) {
-
+if(creep.fatigue > 0)return;
   var spawn = creep.memory.home
   spawn = Game.getObjectById(spawn.id)
+ if(spawn == null){
+	    spawn = Game.spawns.Spawn1
+	}
     var ctrl = creep.room.controller;
     var task = creep.memory.task;
    // if(creep.memory.role == "controller")
@@ -23,9 +26,9 @@ module.exports = function (creep) {
             {
                 spawn.transferEnergy(creep,50);
             }
-            else if(Memory.totalEnergy < 100)
+            else if(Memory.totalEnergy < 300)
             {
-                spawn.transferEnergy(creep,5);
+                return;
             }
             else
             {

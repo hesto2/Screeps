@@ -1,6 +1,8 @@
 module.exports = function (creep) {
+    if(creep.fatigue > 0)return;
 	var spawn = creep.memory.home
 	spawn = Game.getObjectById(spawn.id)
+
         var sources = creep.memory.target
         if(sources == undefined || sources == 1)
         {
@@ -12,10 +14,14 @@ module.exports = function (creep) {
         }
 
         if(creep.energy < creep.energyCapacity) {
-
-            creep.moveTo(sources);
+            if(creep.pos.isNearTo(sources)){
+                creep.harvest(sources);
+            }
+            else{
+                creep.moveTo(sources);
+            }
             creep.memory.task = "working";
-            creep.harvest(sources);
+
         }
         else {
 
@@ -23,7 +29,7 @@ module.exports = function (creep) {
             {
                 var target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:
                     function(object){
-                        if(object.memory.role =="transfer" && object.memory.target.id == creep.id)return object;}})
+                        if(object.memory.role =="transfer" && object.memory.target.id == creep.id)return object;},algorithm:'astar',maxOps:100})
 
                 if(target  == undefined)
                 {
@@ -31,9 +37,13 @@ module.exports = function (creep) {
                 }
                 else
                 {
-
-                    creep.moveTo(target);
-                    creep.transferEnergy(target);
+                    if(creep.pos.isNearTo(target)){
+                        creep.transferEnergy(target);
+                    }
+                    else
+                    {
+                        creep.moveTo(target);
+                    }
 
                 }
             }

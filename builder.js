@@ -1,13 +1,19 @@
 module.exports = function(creep){
+    if(creep.fatigue > 0)return;
     var spawn = creep.memory.home
 	spawn = Game.getObjectById(spawn.id)
+
 	//creep.moveTo(spawn);
 	//return
 	if(creep.energy == 0 && Memory.workers > 1 && Memory.transfers > 1 && Game.flags.bMove == undefined /*&& !(creep.pos.inRangeTo(creep.pos.findClosest(FIND_SOURCES),10))*/) {
+			if(spawn.room.memory.roomEnergy < 300){
+			    return;
+			}
 			creep.moveTo(spawn);
+
 			spawn.transferEnergy(creep);
 		}
-		else if((creep.energy == 0 || creep.memory.task == "harvest")/* && Game.flags.bMove != undefined*/ ){
+		else if((creep.energy == 0 || creep.memory.task == "harvest") && Game.flags.bMove != undefined ){
 		        //var target = creep.pos.findClosest(getSafeSources(Game.flags.bMove.room));
 		        var target = creep.pos.findClosest(FIND_SOURCES);
 		        creep.moveTo(target)
@@ -47,9 +53,9 @@ module.exports = function(creep){
 
 		    }
         else{
-            creep.memory.role = "worker";
-            creep.memory.task = 'going';
-            creep.memory.target = creep.room.memory.safeSources[0]
+            creep.memory.role = "repair";
+            creep.memory.task = 'none';
+
         }
 
 

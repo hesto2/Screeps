@@ -1,15 +1,27 @@
+//Add squad status tracker for room. Make them all return if they are near their flag and the status is PEACE
+
+
+console.log("***************************NEW LINE*********************************")
 var courier = require("courier");
 var builder = require("builder");
 var spawn = require("spawn");
-var worker = require("worker");
+var worker = require("worker")
 var transfer = require("transfer");
-var warrior = require("warrior");
-var construct = require("construct");
+//var construct = require("construct");
 var squad = require("squad");
 var keeperKiller = require("keeperKiller");
 var kMedic = require("kMedic");
 var linkWorker = require("linkWorker");
 var repair = require("repair");
+var nomad = require("nomad");
+
+var cpuInit;
+var cpuCreeps;
+var cpuSpawn;
+
+var cpuInit = Game.getUsedCpu();
+
+
 for(var i in Memory.creeps) {
     if(!Game.creeps[i]) {
         delete Memory.creeps[i];
@@ -22,14 +34,10 @@ for(var i in Memory.creeps) {
     var totTransfer = 0;
     var totWorkers =0;
     var totWarriors=0;
+
     Memory.totalEnergy = 0;
     Memory.energyCapacity = 0;
-    var spawn1 = Game.spawns.Spawn1;
-    Memory.totalEnergy += spawn1.energy
-    //ADD SEPARATE MODULE JUST FOR SPAWN LOGIC AND ROLE ASSIGNMENT
-    var totalEnergy = Game.spawns.Spawn1.room.find(FIND_MY_STRUCTURES, {filter:function(object){
-        if(object.structureType == "extension"){Memory.totalEnergy += object.energy}
-    }})
+
     var squads = [];
     var rooms = Game.rooms;
     for(var room in rooms){
@@ -44,7 +52,11 @@ for(var i in Memory.creeps) {
         room.memory.kMedics=[];
         room.memory.linkWorkers=[];
         room.memory.repairs=[];
+        room.memory.nomads = [];
+        if(room.memory.nomadTargets == undefined)room.memory.nomadTargets = []
     }
+
+    var cpuCreeps = Game.getUsedCpu();
     for(var name in Game.creeps) {
          var startCpu = Game.getUsedCpu();
 
@@ -52,6 +64,7 @@ for(var i in Memory.creeps) {
 
 
         var creep = Game.creeps[name];
+        //if(creep.fatigue > 0)continue;
         var room = Game.rooms[creep.memory.room.name]
 
         var dropped = creep.pos.findClosest(FIND_DROPPED_ENERGY)
@@ -87,12 +100,6 @@ for(var i in Memory.creeps) {
             room.memory.transfers.push(creep);
             totTransfer++;
         }
-        else if(creep.memory.role == "warrior")
-        {
-            warrior(creep);
-            room.memory.warriors.push(creep);
-            totWarriors++;
-        }
         else if(creep.memory.role == "keeperKiller"){
           keeperKiller(creep);
           room.memory.keeperKillers.push(creep);
@@ -109,13 +116,19 @@ for(var i in Memory.creeps) {
             repair(creep);
             room.memory.repairs.push(creep);
         }
+        else if(creep.memory.role == "nomad"){
+            nomad(creep)
+            room.memory.nomads.push(creep)
+        }
+        if(creep.name == "test"){
+            creep.moveTo(Game.flags.TEST)
+        }
         //Print cpu usage per creep
          var elapsed = Game.getUsedCpu() - startCpu;
-         if(elapsed > 20)
-        console.log('Creep '+creep.memory.role+creep.memory.task +' has used '+elapsed+' CPU time');
+         if(elapsed > 10)
+        console.log('Creep '+creep.memory.role+ ' ' +creep.memory.task +' has used '+elapsed+' CPU time ' + creep.room.name);
     }
-
-
+    cpuCreeps = Game.getUsedCpu() - cpuCreeps;
 
     //MemoryAssignment
     Memory.couriers = totCouriers;
@@ -125,18 +138,28 @@ for(var i in Memory.creeps) {
     Memory.warriors = totWarriors;
     Memory.squads = squads;
 
+    /*
     if(Game.spawns.Spawn1.room.name == "sim")
     {
-        Game.creeps.test.memory.role = "keeperKiller"
+
+        Game.creeps.test.memory.role = "squadRanged"
         Game.creeps.test1.memory.role = "kMedic"
         Game.creeps.test2.memory.role = "kMedic"
-        keeperKiller(Game.creeps.test)
-        kMedic(Game.creeps.test1)
-        kMedic(Game.creeps.test2)
+        squadRanged(Game.creeps.test)
 
         return;
     }
     else
     {
         spawn();
-    }
+        var elapsed = Game.getUsedCpu() - startCpu;
+    }*/
+    cpuSpawn = Game.getUsedCpu();
+    spawn();
+    cpuSpawn = Game.getUsedCpu() - cpuSpawn;
+
+
+    //console.log("#############MEMORY USAGE#################")
+    console.log("INIT: " + cpuInit);
+    console.log("CREEPS: " + cpuCreeps);
+    console.log("SPAWN: " + cpuSpawn);

@@ -9,7 +9,7 @@ module.exports = function(creep){
 		Cyan - Move to Waypoint
 
 		Red- Clear room (creeps + buildings)
-		Yellow - Attack source keeper at Point
+		Yellow - Attack Target
 		Grey - Claim Controller
 
 		White- Hold Point
@@ -22,7 +22,6 @@ module.exports = function(creep){
 	var task = creep.memory.task;
 	var squadFlag = [];
 	for(var gflag in flags){
-
 		if(gflag.substr(0,gflag.indexOf('-')) == creep.memory.squad){
 			//Check color
 			gflag = Game.flags[gflag]
@@ -61,9 +60,11 @@ module.exports = function(creep){
 
 	//Role performance
 	if(creep.memory.task == "melee"){
+
 		melee(creep,flag)
 	}
 	else if(creep.memory.task == "ranged"){
+	    //console.log(flag.pos + " XXXXXXXXXXXXXX")
 		ranged(creep,flag)
 	}
 	else if(creep.memory.task == "medic"){
