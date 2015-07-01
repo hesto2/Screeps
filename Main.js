@@ -1,7 +1,10 @@
 //Add squad status tracker for room. Make them all return if they are near their flag and the status is PEACE
-
-
-console.log("***************************NEW LINE*********************************")
+//Add source keeper array and have creeps auto avoid it in moveTo function
+//Add new spawn code that allows spawns to give units to different rooms and work together
+//Sort all creeps into arrays and then perform roles, that way you can access the creeps array
+//Add room controller at beginning that counts hostile creeps in the room and adds them to memory.
+//Have worker creeps add themselves to a room variable array that says they are available, tell transfer creeps to move to that and set them as their target. Pop them off the array after claiming them
+console.log("**********************************************************************")
 var courier = require("courier");
 var builder = require("builder");
 var spawn = require("spawn");
@@ -14,19 +17,22 @@ var kMedic = require("kMedic");
 var linkWorker = require("linkWorker");
 var repair = require("repair");
 var nomad = require("nomad");
-
+var prototypes = require('prototypes')
+var rooms = require('rooms')
 var cpuInit;
 var cpuCreeps;
 var cpuSpawn;
 
 var cpuInit = Game.getUsedCpu();
 
-
+ //Delete old creeps
 for(var i in Memory.creeps) {
     if(!Game.creeps[i]) {
         delete Memory.creeps[i];
     }
 }
+//Init Prototypes
+prototypes()
     var totCouriers=0;
     var totHarvesters=0;
     var totBuilders = 0;
@@ -37,34 +43,21 @@ for(var i in Memory.creeps) {
 
     Memory.totalEnergy = 0;
     Memory.energyCapacity = 0;
-
-    var squads = [];
-    var rooms = Game.rooms;
-    for(var room in rooms){
-        room = rooms[room]
-        room.memory.couriers = [];
-        room.memory.squads = [];
-        room.memory.builders = [];
-        room.memory.workers = [];
-        room.memory.transfers = [];
-        room.memory.warriors=[];
-        room.memory.keeperKillers = [];
-        room.memory.kMedics=[];
-        room.memory.linkWorkers=[];
-        room.memory.repairs=[];
-        room.memory.nomads = [];
-        if(room.memory.nomadTargets == undefined)room.memory.nomadTargets = []
-    }
+    //Init Rooms
+    var squads = []
+    rooms()
 
     var cpuCreeps = Game.getUsedCpu();
     for(var name in Game.creeps) {
          var startCpu = Game.getUsedCpu();
 
     // creep logic goes here
-
-
         var creep = Game.creeps[name];
         //if(creep.fatigue > 0)continue;
+        if(creep.memory.room == undefined){
+            creep.memory.room = creep.room
+
+        }
         var room = Game.rooms[creep.memory.room.name]
 
         var dropped = creep.pos.findClosest(FIND_DROPPED_ENERGY)
@@ -96,6 +89,7 @@ for(var i in Memory.creeps) {
             totWorkers++;
         }
         else if(creep.memory.role == 'transfer') {
+
             transfer(creep);
             room.memory.transfers.push(creep);
             totTransfer++;

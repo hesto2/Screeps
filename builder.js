@@ -37,8 +37,13 @@ module.exports = function(creep){
       else{
           var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
 		if(targets.length) {
+		    if(creep.pos.isNearTo(targets[0]))
+		    {
+		        creep.build(targets[0]);
+		    }
+		    else
 			creep.moveTo(targets[0]);
-			creep.build(targets[0]);
+
 		}
 		//creep.moveTo(Game.flags.bMove)
       }

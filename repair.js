@@ -48,11 +48,13 @@ function getTarget(creep,room){
             else if(object.structureType == STRUCTURE_ROAD){
                 roads.push(object)
             }
-            else if(object.structureType == STRUCTURE_WALL && object.hits < 1000000){
-                var near = object.pos.findInRange(FIND_HOSTILE_STRUCTURES,3)
+            else if(object.structureType == STRUCTURE_WALL ){
 
-                if(near == false)
-                walls.push(object)
+                var near = object.pos.findInRange(FIND_HOSTILE_STRUCTURES,3)
+                if(((room.name == 'E2S1' || room.name =='E3N2') && object.hits < 3000000) || object.hits<2000000){
+                    if(near == false)
+                    walls.push(object)
+                }
             }
         }
     }})

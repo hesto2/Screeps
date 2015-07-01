@@ -136,7 +136,7 @@ module.exports = function()
              builders = 2;
              squads = 3;
              repairs = 2;
-             transfers = workers+2;
+             transfers = workers+1;
              keeperKillers = 0;
              kMedics = 0
        }
@@ -147,7 +147,7 @@ module.exports = function()
              builders = 2;
              squads = 2;
              repairs = 2;
-             transfers = workers+2;
+             transfers = workers+1;
              keeperKillers = 0;
              kMedics = 0
         }
@@ -185,7 +185,7 @@ module.exports = function()
              builders = 2;
              squads = 1;
              repairs = 1;
-             transfers = workers+2;
+             transfers = workers+1;
              keeperKillers = 0;
              kMedics = 0
        }
@@ -197,7 +197,7 @@ module.exports = function()
            builders = 2;
            repairs = 1;
            squads = 0;
-               transfers = workers+2;
+           transfers = workers+1;
            keeperKillers = 0;
            kMedics = 0;
      }
@@ -208,7 +208,7 @@ module.exports = function()
          couriers = 3;
          builders = 1;
          repairs = 1;
-         transfers = workers+2;
+         transfers = workers;
      }
      else if(roomEnergy > 450)
      {
@@ -262,13 +262,17 @@ module.exports = function()
      {
        var spawn = spawns[spawn];
        if(spawn.spawning != null )continue;
+
        var Tsquads = checkSquads();
+
        	if(Tworkers < workers ){
        	    var index = room.memory.curSource;
        	    console.log(spawn.name + " Spawning worker for " + room.memory.curSource);
 
        	    var target = room.memory.safeSources[index];
-       	    var result = spawn.createCreep(workerBody,undefined, {role:"worker",target:target,task:"coming",home:spawn,room:spawn.room});
+       	    /*var soPath = room.findPath(spawn.pos,target.pos,{ignoreCreeps:true})
+       	    var spPath = room.findPath(target,spawn,{ignoreCreeps:true})*/
+       	    var result = spawn.createCreep(workerBody,undefined, {role:"worker",target:target,task:"coming",home:spawn,room:spawn.room/*,sourcePath:soPath,spawnPath:spPath*/});
              if(typeof(result == 'string')){
                room.memory.curSource++;
          	    if(room.memory.curSource >= room.memory.safeSources.length){room.memory.curSource = 0}

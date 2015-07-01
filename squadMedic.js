@@ -91,7 +91,7 @@ function rally(creep,flag){
 			        creep.memory.target = object;
 					return object;
 			}
-		},algorithm:'dijkstra ',maxOps:250});
+		}});
 		if(target == undefined || creep.memory.target == "none"){
 		    target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){
 			if(object.hits < object.hitsMax && object != creep)
@@ -103,7 +103,8 @@ function rally(creep,flag){
 		}
 		if(target == undefined || creep.memory.target == "none"){
 		    if(creep.pos.inRangeTo(flag,3) == false){
-			creep.moveTo(flag)}
+			    creep.moveTo(flag,{reusePath:20})
+		    }
 			creep.memory.target = "none"
 			if(creep.hits < creep.hitsMax)creep.heal(creep)
 		}

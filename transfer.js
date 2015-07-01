@@ -1,5 +1,6 @@
 module.exports = function(creep)
 {
+
     var startCpu = Game.getUsedCpu();
     if(creep.fatigue > 0)return;
 	var spawn = creep.memory.home
@@ -13,13 +14,13 @@ module.exports = function(creep)
     var couriers = room.memory.couriers;
     var task = 'init'
 
-		if(creep.energy < .15*creep.energyCapacity)
+		if(creep.energy < .5*creep.energyCapacity)
 		{
 		    var target;
 			if(creep.memory.target == "none" || creep.memory.target == undefined || creep.memory.target.name == creep.name)
 			{
                 task = 'assign target find going'
-				target = creep.pos.findClosest(workers, {filter:function(object){if(object.memory.task == "going")return object;},maxOps:100})
+				target = creep.pos.findClosest(workers, {filter:function(object){if(object.memory.task == "going")return object;}})
 				if(target)
 				{
 
@@ -30,7 +31,7 @@ module.exports = function(creep)
 				else
 				{
 				    task = 'assign target find working'
-				    target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){if(object.memory.task == "working" && object.memory.role == "worker" && object.energy >= .3*object.energyCapacity )return object;},maxOps:100})
+				    target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){if(object.memory.task == "working" && object.memory.role == "worker" && object.energy >= .3*object.energyCapacity )return object;}})
 				    creep.moveTo(target);
 
 				}
@@ -73,13 +74,13 @@ module.exports = function(creep)
 
 			       if(creep.room.memory.roomEnergy < creep.room.memory.energyCapacity){
                     task = 'assign target extension'
-			        var target = creep.pos.findClosest(FIND_MY_STRUCTURES, {filter:function(object){if(object.structureType =="extension" && object.energy < object.energyCapacity)return object;},algorithm:'dijkstra',maxOps:100})
+			        var target = creep.pos.findClosest(FIND_MY_STRUCTURES, {filter:function(object){if(object.structureType =="extension" && object.energy < object.energyCapacity)return object;},algorithm:'dijkstra'})
 			        //console.log(target)
 			        }
 			        if(target == undefined || target == null)
 			        {
 			            task = 'assign target courier'
-			            target = creep.pos.findClosest(couriers, {filter:function(object){if(object.energy < object.energyCapacity)return object;},algorithm:'astar',maxOps:100})
+			            target = creep.pos.findClosest(couriers, {filter:function(object){if(object.energy < object.energyCapacity)return object;}})
 			        }
 			        if(creep.pos.isNearTo(target)){
 			            creep.transferEnergy(target)

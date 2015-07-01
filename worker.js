@@ -29,7 +29,7 @@ module.exports = function (creep) {
             {
                 var target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:
                     function(object){
-                        if(object.memory.role =="transfer" && object.memory.target.id == creep.id)return object;},algorithm:'astar',maxOps:100})
+                        if(object.memory.role =="transfer" && object.memory.target.id == creep.id)return object;}})
 
                 if(target  == undefined)
                 {
