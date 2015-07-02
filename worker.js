@@ -13,14 +13,16 @@ module.exports = function (creep) {
             sources = Game.getObjectById(sources["id"])
         }
 
-        if(creep.energy < creep.energyCapacity) {
+        if(creep.energy < creep.energyCapacity && creep.memory.task != 'going') {
             if(creep.pos.isNearTo(sources)){
                 creep.harvest(sources);
+                creep.memory.task = "working";
             }
             else{
                 creep.moveTo(sources);
+                creep.memory.task = 'going to source'
             }
-            creep.memory.task = "working";
+
 
         }
         else {
@@ -49,7 +51,8 @@ module.exports = function (creep) {
             }
             else
             {
-                var target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:
+                var targets = creep.room.memory.transfers
+                var target = creep.pos.findClosest(targets, {filter:
                     function(object){
                         if(object.memory.role =="transfer" && object.memory.target.id == creep.id)return object;}})
                 if(target != undefined && target != null)

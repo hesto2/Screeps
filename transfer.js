@@ -31,7 +31,7 @@ module.exports = function(creep)
 				else
 				{
 				    task = 'assign target find working'
-				    target = creep.pos.findClosest(FIND_MY_CREEPS, {filter:function(object){if(object.memory.task == "working" && object.memory.role == "worker" && object.energy >= .3*object.energyCapacity )return object;}})
+				    target = creep.pos.findClosest(workers, {filter:function(object){if(object.memory.task == "working" && object.energy >= .3*object.energyCapacity )return object;}})
 				    creep.moveTo(target);
 
 				}
