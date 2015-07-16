@@ -6,14 +6,19 @@ module.exports = function (creep) {
         creep.memory.task = "harvest"
         if(creep.room != Game.flags.nomad.room){
             creep.moveTo(Game.flags.nomad)
-
+            return
         }
         else
         {
             if(creep.memory.target == undefined)
             {
                 creep.memory.target = Game.flags.nomad.pos.findClosest(FIND_SOURCES)
+                if(target == null){
+                    flag = Game.flags.nomadSource
+                   target =  flag.room.lookForAt('source',flag.pos)
+                }
             }
+
             var target = creep.memory.target
             target = Game.getObjectById(target.id)
             creep.moveTo(target)

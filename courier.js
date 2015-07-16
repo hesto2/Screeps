@@ -5,24 +5,18 @@ if(creep.fatigue > 0)return;
 
     var ctrl = creep.room.controller;
     var task = creep.memory.task;
+
     if(creep.energy == 0)
     {
         creep.memory.task = "coming";
         var link = creep.memory.link
         if(creep.memory.link == undefined){
-            var method;
-            if(creep.pos.isNearTo(ctrl)){
-                method = 'astar'
-            }
-            else{
-                method = 'dijkstra'
-            }
-
-           link = creep.room.controller.pos.findClosest(FIND_MY_STRUCTURES,{filter:{structureType:STRUCTURE_LINK},algorithm:method})
+           link = Game.getObjectById(creep.room.memory.structures.links.controller)
            creep.memory.link = link
         }
-        if(link != null)
-        if(creep.room.controller.pos.getRangeTo(link) < 5){
+        if(link != null && link != undefined)
+        {
+            link = Game.getObjectById(creep.memory.link.id)
             creep.moveTo(link,{reusePath:20});
             link.transferEnergy(creep);
             return;

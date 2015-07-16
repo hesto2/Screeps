@@ -1,9 +1,11 @@
-//Add squad status tracker for room. Make them all return if they are near their flag and the status is PEACE
+
 //Add source keeper array and have creeps auto avoid it in moveTo function
 //Add new spawn code that allows spawns to give units to different rooms and work together
-//Sort all creeps into arrays and then perform roles, that way you can access the creeps array
-//Add room controller at beginning that counts hostile creeps in the room and adds them to memory.
 //Have worker creeps add themselves to a room variable array that says they are available, tell transfer creeps to move to that and set them as their target. Pop them off the array after claiming them
+// Optimize FIND AND ATTACK
+//Change where transfers go to by default
+//Use new room strucuters object to maximize repair and transfer efficiency. Eventually set it up to maximize squad attack logic
+
 console.log("**********************************************************************")
 var doRoles = require('doRoles')
 var prototypes = require('prototypes')
@@ -49,11 +51,11 @@ prototypes()
     squadGroups[3].medic = {}
     squadGroups[3].melee = {}
     squadGroups[3].ranged = {}
+    Memory.spawns = Game.spawns
 
-
-
+    var cpuRooms = Game.getUsedCpu();
     rooms()
-
+    console.log("ROOMS: " + (Game.getUsedCpu() - cpuRooms) )
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
         //if(creep.fatigue > 0)continue;
@@ -121,6 +123,9 @@ prototypes()
     Memory.repairs = repairs
     Memory.nomads = nomads
     Memory.squads = squads;
+
+
+
 
     doRoles()
 

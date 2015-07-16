@@ -5,7 +5,19 @@ module.exports = function(creep, flag){
 
 	}
 	else if(flag.color == COLOR_RED){
-        attack(creep,flag)
+	    if(creep.room != flag.room){
+	        creep.moveTo(flag)
+	        return
+	    }
+		if(creep.room.memory.hostileCreeps.length > 0){
+            creep.findAndAttack()
+        }
+        else{
+            if(creep.pos.inRangeTo(flag,2)){
+                return
+            }
+            creep.moveTo(flag,{reusePath:20})
+        }
 	}
 	else if(flag.color == COLOR_YELLOW){
         attackPoint(creep,flag)
@@ -38,19 +50,22 @@ function attackPoint(creep,flag){
         creep.moveTo(flag)
         return
     }
-    var target = creep.room.lookForAt('structure',flag)
-
+     var target = creep.room.lookForAt('structure',flag)
     if(target == undefined)
-   var target = flag.pos.findClosest(FIND_STRUCTURES, {filter:function(object){
-    	    if(object.owner != undefined && object.owner.username != "Source Keeper" && object.owner.username != "ultramixerman" && object.owner.username !="hesto2" && object.structureType != STRUCTURE_CONTROLLER)
+    var target = flag.pos.findClosest(FIND_HOSTILE_STRUCTURES, {filter:function(object){
+    	    if(object.owner != undefined && object.owner.username != "Source Keeper" && object.owner.username != "ultramixerman" && object.owner.username !="hesto2" &&object.structureType != STRUCTURE_CONTROLLER)
     	    {
     	        return object;
     	    }
     	}});
+
+
             if(target)
             {
+
                 if(creep.pos.inRangeTo(target,3)){
-                    creep.rangedAttack(target)
+                    console.log(creep.rangedAttack(target))
+
                 }
                 else{
                     creep.moveTo(target);
@@ -63,6 +78,10 @@ function attackPoint(creep,flag){
         	}
 }
 function rally(creep,flag){
+    if(creep.room != flag.room){
+        creep.moveTo(flag)
+        return
+    }
 	var target = creep.pos.findClosest(FIND_HOSTILE_CREEPS, {filter:function(object){
 			if(object.owner.username != "Source Keeper" && object.owner.username != "ultramixerman")
 			{

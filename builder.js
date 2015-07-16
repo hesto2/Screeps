@@ -5,7 +5,7 @@ module.exports = function(creep){
 
 	//creep.moveTo(spawn);
 	//return
-	if(creep.energy == 0 && Memory.workers > 1 && Memory.transfers > 1 && Game.flags.bMove == undefined /*&& !(creep.pos.inRangeTo(creep.pos.findClosest(FIND_SOURCES),10))*/) {
+	if(creep.energy == 0 && creep.room.memory.roomEnergy > 200 && Game.flags.bMove == undefined /*&& !(creep.pos.inRangeTo(creep.pos.findClosest(FIND_SOURCES),10))*/) {
 			if(spawn.room.memory.roomEnergy < 300){
 			    return;
 			}
@@ -36,12 +36,8 @@ module.exports = function(creep){
         }
       else{
           var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-		if(targets.length) {
-		    if(creep.pos.isNearTo(targets[0]))
-		    {
-		        creep.build(targets[0]);
-		    }
-		    else
+		if(targets.length > 0) {
+		   creep.build(targets[0]);
 			creep.moveTo(targets[0]);
 
 		}
@@ -52,7 +48,7 @@ module.exports = function(creep){
     }
 	else{
 		var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-		if(targets.length) {
+		if(targets.length > 0) {
 		    creep.moveTo(targets[0])
 		    creep.build(targets[0])
 

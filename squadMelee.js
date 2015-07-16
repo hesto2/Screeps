@@ -3,6 +3,10 @@ module.exports = function(creep, flag){
 		creep.moveTo(flag,{reusePath:20})
 	}
 	else if(flag.color == COLOR_RED){
+	    if(creep.room != flag.room){
+	        creep.moveTo(flag)
+	        return
+	    }
         if(creep.room.memory.hostileCreeps.length > 0){
             creep.findAndAttack()
         }
@@ -32,6 +36,7 @@ module.exports = function(creep, flag){
 	else if(flag.color == COLOR_BLUE){
 		rally(creep,flag)
 	}
+
 
 }
 
@@ -88,6 +93,9 @@ function attackPoint(creep,flag){
     	        return object;
     	    }
     	}});
+	else{
+	    target = target[0]
+	}
     if(target)
     {
         creep.moveTo(target);

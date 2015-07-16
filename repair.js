@@ -7,7 +7,7 @@ module.exports=function repair(creep){
 	}
     var room = Game.rooms[creep.memory.room.name]
     var repairers = room.memory.repairers
-    creep.say("hi")
+
     if(spawn.hits < spawn.hitsMax){
         creep.memory.target = spawn;
     }
@@ -51,7 +51,11 @@ function getTarget(creep,room){
             else if(object.structureType == STRUCTURE_WALL ){
 
                 var near = object.pos.findInRange(FIND_HOSTILE_STRUCTURES,3)
-                if(((room.name == 'E2S1' || room.name =='E3N2') && object.hits < 3000000) || object.hits<2000000){
+                if( ((room.name =='E3N2') && object.hits < 10000000) ||
+                    ((room.name ==''|| room.name == 'E2S3') && object.hits < 6000000) ||
+                    ((room.name == 'E2S1' || room.name =='E2S2' ) && object.hits < 4000000) ||
+                    ((room.name == 'E4N2') && object.hits < 3000000) ||
+                   ((room.name == '' || room.name == 'E3S1'|| room.name == 'E2S4' || room.name == 'E5S7') && object.hits < 2000000) ||object.hits<1000000){
                     if(near == false)
                     walls.push(object)
                 }
@@ -70,6 +74,7 @@ function getTarget(creep,room){
     else if(walls.length > 0 ){
         creep.memory.target = walls[0];
     }
+
 
 
 

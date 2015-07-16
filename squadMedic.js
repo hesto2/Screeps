@@ -111,6 +111,12 @@ function rally(creep,flag){
 		else{
 
 			creep.moveTo(target)
-			creep.heal(target);
+			if(creep.pos.isNearTo(target)){
+			    creep.heal(target);
+			}
+			else{
+			    creep.rangedHeal(target);
+			}
+
 		}
 }

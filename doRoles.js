@@ -20,6 +20,11 @@ module.exports = function ()
 	for(creep in Memory.transfers){
 		creep = Memory.transfers[creep]
 		transfer(creep)
+		elapsed = Game.getUsedCpu() - startCpu
+		if(elapsed > 130){
+		    console.log('TRANSFERS EXCEEDED LIMIT, BREAKING')
+		    break
+		}
 	}
 	elapsed = Game.getUsedCpu()-startCpu
 	console.log("TRANSFERS: " + elapsed)
@@ -59,6 +64,7 @@ module.exports = function ()
 	startCpu = Game.getUsedCpu()
 	for(creep in Memory.repairs){
 		creep = Memory.repairs[creep]
+		creep.say("HI")
 		repair(creep)
 	}
 	elapsed = Game.getUsedCpu()-startCpu
