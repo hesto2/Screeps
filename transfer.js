@@ -1,6 +1,6 @@
 module.exports = function(creep)
 {
-
+    creep.pickupDropped()
     var startCpu = Game.getUsedCpu();
     //creep.say(creep.memory.task)
     if(creep.room.memory.roomEnergy == creep.room.memory.energyCapacity && creep.energy > .5* creep.energyCapacity && creep.room.controller.level > 5)return
@@ -43,7 +43,9 @@ module.exports = function(creep)
 			if(creep.memory.target == "none" || creep.memory.target == undefined || creep.memory.target.name == creep.name)
 			{
 				target = creep.pos.findClosest(workers, {filter:function(object){if(object.memory.task == "going")return object;}})
-				if(target)
+				//console.log(target)
+
+				if(target != null && target.memory != null)
 				{
 
 	    			creep.memory.target = target;
@@ -53,8 +55,12 @@ module.exports = function(creep)
 				}
 				else
 				{
+
 				    target = creep.pos.findClosest(workers, {filter:function(object){if(object.memory.task == "working" && object.energy >= .3*object.energyCapacity )return object;}})
-				    creep.moveTo(target);
+				    if(creep.pos.isNearTo(target) == false){
+				        creep.moveTo(target);
+				    }
+
 
 				}
 
@@ -73,8 +79,11 @@ module.exports = function(creep)
 				{
 
 					var target = Game.getObjectById(creep.memory.target.id)
+                    if(creep.pos.isNearTo(target) == false)
+                    {
+                        creep.moveTo(target);
+                    }
 
-					creep.moveTo(target);
 				}
 				else
 				{
@@ -90,6 +99,7 @@ module.exports = function(creep)
 		{
 			creep.memory.target = "none";
             creep.memory.task = 'depositing'
+
 			creep.depositEnergy()
 
 			if(creep.energy == 0){

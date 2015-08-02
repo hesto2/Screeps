@@ -14,8 +14,6 @@ module.exports = function()
      var roomEnergy = calculateRoomEnergy(room);
      room.memory.roomEnergy = roomEnergy;
 
-
-
      var builders= 0;
      var transfers= 0;
      var couriers= 0;
@@ -39,6 +37,7 @@ module.exports = function()
      var TlinkWorkers = room.memory.linkWorkers.length;
      var Trepairs = room.memory.repairs.length;
      var Tnomads = room.memory.nomads.length;
+     var Tguards = room.memory.guards.length;
 
 
      var sSources = room.memory.safeSources.length
@@ -60,6 +59,7 @@ module.exports = function()
           var builderBody
           var medicBody
           var repairBody
+          var guardBody
         if(roomEnergy >= 2000){
             workerBody = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
             transferBody = [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
@@ -68,6 +68,7 @@ module.exports = function()
            builderBody = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
            medicBody = [HEAL,HEAL,HEAL,MOVE,MOVE,MOVE]
            repairBody = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
+           guardBody = [TOUGH,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,MOVE,RANGED_ATTACK,MOVE,MOVE,MOVE,MOVE]
         }
         else if(roomEnergy >= 1600){
           workerBody = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
@@ -77,6 +78,7 @@ module.exports = function()
            builderBody = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE];
            medicBody = [HEAL,HEAL,HEAL,MOVE,MOVE,MOVE]
            repairBody = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE]
+           guardBody = [TOUGH,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,MOVE,MOVE,MOVE,MOVE]
         }
        else if(roomEnergy >= 1200)
         {
@@ -87,6 +89,7 @@ module.exports = function()
            builderBody = [WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE];
            medicBody = [HEAL,HEAL,HEAL,MOVE,MOVE,MOVE]
            repairBody = [WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]
+           guardBody = [TOUGH,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,MOVE,MOVE,MOVE]
         }
        else if(roomEnergy >= 900)
         {
@@ -97,6 +100,7 @@ module.exports = function()
            builderBody = [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE];
            medicBody = [HEAL,HEAL,HEAL,MOVE,MOVE,MOVE]
            repairBody = [WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE]
+           guardBody = [TOUGH,RANGED_ATTACK,RANGED_ATTACK,RANGED_ATTACK,MOVE,MOVE]
 
         }
       else if(roomEnergy >= 700)
@@ -107,6 +111,7 @@ module.exports = function()
           warriorBody = [TOUGH,ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE,MOVE];
           builderBody = [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE];
           repairBody = [WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE]
+          guardBody = [TOUGH,RANGED_ATTACK,RANGED_ATTACK,MOVE]
        }
        else if(roomEnergy > 600)
        {
@@ -116,6 +121,7 @@ module.exports = function()
           warriorBody = [TOUGH,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE];
           builderBody = [WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE];
           repairBody = [WORK,WORK,WORK,WORK,CARRY,CARRY,MOVE]
+          guardBody = [TOUGH,RANGED_ATTACK,RANGED_ATTACK,MOVE]
        }
        else if(roomEnergy >= 500)
        {
@@ -125,6 +131,7 @@ module.exports = function()
           warriorBody = [TOUGH,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE,MOVE];
           builderBody = [WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE];
           repairBody = [WORK,WORK,WORK,CARRY,CARRY,MOVE]
+          guardBody = [TOUGH,RANGED_ATTACK,MOVE]
        }
        else
        {
@@ -133,7 +140,7 @@ module.exports = function()
           courierBody = [CARRY,WORK,MOVE];
           warriorBody = [ATTACK,ATTACK,MOVE,MOVE];
           builderBody = [WORK,CARRY,MOVE,MOVE];
-
+          guardBody = [TOUGH,RANGED_ATTACK,MOVE]
        }
 
 
@@ -145,74 +152,74 @@ module.exports = function()
              builders = 2;
              squads = 3;
              repairs = 2;
-             transfers = workers+2;
+             transfers = workers;
              keeperKillers = 0;
              kMedics = 0
        }
         else if(roomEnergy > 1650){
-            workers = 2 * sSources + 1
+            workers = 2 * sSources
              warriors = 5;
              couriers = 3;
              builders = 2;
              squads = 2;
              repairs = 2;
-             transfers = workers+2;
+             transfers = workers;
              keeperKillers = 0;
              kMedics = 0
         }
        else if(roomEnergy > 1200)
          {
-             workers = 2 * sSources + 2
+             workers = 2 * sSources
              warriors = 5;
              couriers = 3;
              builders = 2;
              squads = 1;
              repairs = 2;
-             transfers = workers+2;
+             transfers = workers;
              keeperKillers = 0;
              kMedics = 0
 
        }
        else if(roomEnergy > 1100)
          {
-             workers = 3 * sSources + 1
+             workers = 2 * sSources
              warriors = 5;
              couriers = 3;
              builders = 2;
              squads = 1;
              repairs = 1;
-             transfers = workers+2;
+             transfers = workers;
              keeperKillers = 0;
              kMedics = 0
 
        }
        else if(roomEnergy > 950)
          {
-             workers = 3 * sSources
+             workers = 2 * sSources
              warriors = 5;
              couriers = 3;
              builders = 2;
              squads = 1;
              repairs = 1;
-             transfers = workers+1;
+             transfers = workers;
              keeperKillers = 0;
              kMedics = 0
        }
      else if(roomEnergy > 700)
        {
-           workers = 3 * sSources
+           workers = 2 * sSources
            warriors = 5;
            couriers = 3;
            builders = 2;
            repairs = 1;
            squads = 0;
-           transfers = workers+1;
+           transfers = workers;
            keeperKillers = 0;
            kMedics = 0;
      }
      else if(roomEnergy > 525)
      {
-         workers = 3 * sSources
+         workers = 2 * sSources
          warriors = 2;
          couriers = 3;
          builders = 1;
@@ -228,7 +235,7 @@ module.exports = function()
      }
      else
      {
-         workers =2*sSources;
+         workers =2 * sSources;
          couriers = 1;
          builders = 1;
          transfers = workers;
@@ -238,23 +245,43 @@ module.exports = function()
          }
      }
 
+     //Calculate Guards
+     var guardFlags=[]
+    var flags = room.find(FIND_FLAGS)
+    for(var flag in flags){
+        flag = flags[flag]
+        if(flag.name.indexOf('Guard') > -1){
+            guardFlags.push(flag)
+
+        }
+    }
+    if(guardFlags.length > 0){
+        guards = guardFlags.length
+    }
+    else{
+        guards = 0
+    }
+
+
 
      if(room.controller != undefined)
      if(room.controller.level == 1){
         couriers = 1;
     }
-    if(room.name == "E4N2"){nomads = 2;}
+    if(room.name == "E2S4"){nomads = 2;}
+    if(room.name == "E2S5"){transfers = 3;}
     if(room.name == "E3N2"){transfers = 4}
     if(room.name == "E5S7" && roomEnergy > 1000){repairs = 2}
    //var links = room.find(FIND_MY_STRUCTURES, {filter:{structureType:STRUCTURE_LINK}});
 
    var sourceLinks = room.memory.structures.links.sourceLinks
+   var nodeLinks = room.memory.structures.links.nodes
    var controllerLink = room.memory.structures.links.controller
-     if(sourceLinks.length > 0 && controllerLink != undefined)
+     if(sourceLinks.length > 0 && (controllerLink != undefined || nodeLinks.length > 0))
      {
-
-       if(roomEnergy > 1300){
         linkWorkers = sourceLinks.length;
+       if(roomEnergy > 1300){
+
         couriers = 2;
        }
        else{
@@ -264,9 +291,14 @@ module.exports = function()
        //doLinks(links);
      }
 
+    if(workers == 0 && linkWorkers > 0){
+
+     }
+
+
      warriors = 0
-     if(room.name == "E3S1"){repairs=2,couriers =1,workers =3, transfers = 4}
-     if(room.name == "E2S2"){repairs=1;}
+     if(room.name == "E3S1"){repairs=2,couriers =1,workers =2, transfers = 2}
+     if(room.name == "E2S2"){repairs=1; transfers = 4}
      //if(room.name == "E2S3"){keeperKillers = 1; kMedics = 2 }
 
 //SPAWN LOGIC
@@ -335,6 +367,41 @@ module.exports = function()
 
          }
 
+         else if(Tguards < guards) {
+             console.log(spawn.name + " Spawning Guard");
+             if(spawn.canCreateCreep(guardBody) == OK) {
+                var target;
+                var flags = guardFlags
+                guards = room.memory.guards
+                for(var flag in flags){
+                    flag = flags[flag]
+                    var taken = false
+                    for(var guard in guards){
+                        guard = guards[guard]
+                        if(guard.memory.target == flag){
+                            taken = true
+                        }
+                    }
+                    if(!taken)target = flag
+                }
+                console.log(target)
+                if(target == undefined)continue
+
+                //Change guard body to melee instead of ranged if flag is red
+                if(target.color == COLOR_RED){
+                   for(var part in guardBody){
+                       if(guardBody[part] == RANGED_ATTACK){
+                           guardBody[part] = ATTACK
+                           guardBody.push(ATTACK)
+                       }
+
+                   }
+                }
+                var result = spawn.createCreep(guardBody,undefined, {role:"guard", home:spawn, task:"none",room:spawn.room,target:target});
+                spawn.room.memory.guards.push(Game.creeps[result])
+            }
+
+         }
          else if(TkeeperKillers < keeperKillers) {
              console.log(spawn.name + " Spawning KeeperKiller");
              if(spawn.canCreateCreep(keeperKillerBody) == OK) {
@@ -397,7 +464,7 @@ module.exports = function()
             }
             if(/*room.name != 'E3N2' && room.name != 'E4N2' &&*/ room.name != 'E5S7')
             checkSquads(spawn,squads,roomEnergy)
-            if(spawn == undefined)return
+            if(spawn == undefined)continue
             var near = spawn.pos.findInRange(FIND_MY_CREEPS,1)
             if(near.length > 6){
                 for(var creep in near){

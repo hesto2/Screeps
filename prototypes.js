@@ -150,6 +150,37 @@
             return this.pos.findInRange(targets, 3, opts);
          }
          }
+    Creep.prototype.pickupDropped = function(){
+        var targets = this.room.memory.droppedEnergy
+        if(targets.length > 0){
+            if(this.pos.isNearTo(targets[0])){
+                this.pickup(targets[0])
+            }
+        }
+    }
+    Creep.prototype.findFlag = function(room,name){
+        var flags = room.find(FIND_FLAGS)
+        for(var flag in flags){
+            flag = flags[flag]
+            if(flag.name.indexOf(name) > -1){
+                return flag
+            }
+        }
+    }
+    Creep.prototype.harvestAtFlag = function(flag,creep){
+        if(this.pos.isNearTo(flag)){
+                var source = this.room.lookForAt('source',flag.pos)
+                this.harvest(source)
+                this.memory.task = 'harvesting'
+                if(this.energy == this.energyCapacity)
+                {
+                    this.memory.task = "done"
+                }
+            }
+            else{
+                this.moveTo(flag)
+            }
+    }
 
     Creep.prototype.findAndAttack = function(){
         var method;
@@ -174,7 +205,7 @@
         }
 
         //Assign target and based off of what tools you have, move to Target
-        var target = this.pos.findClosest(this.room.memory.hostileCreeps,{algorithm:method})
+        var target = this.pos.findClosest(this.room.memory.hostileCreeps)
         var partsAttack = this.getActiveBodyparts(ATTACK)
         var partsRanged = this.getActiveBodyparts(RANGED_ATTACK)
         if(partsAttack > 0 || (partsAttack > 0 && partsRanged > 0)){
@@ -192,8 +223,8 @@
                 }
         }
         else if(partsRanged > 0){
-
             this.kite(2,target)
+            if(target==null)return
             if(this.pos.inRangeTo(target,3)){
                         this.rangedAttack(target)
               }
@@ -205,6 +236,7 @@
 
     Creep.prototype.kite = function(distance,target){
         if(target == null){return}
+
         if(this.pos.inRangeTo(target,distance)){
             this.moveTo(this.pos.x + this.pos.x - target.pos.x, this.pos.y + this.pos.y - target.pos.y );
         }
@@ -214,34 +246,28 @@
     }
 
     Creep.prototype.depositEnergy = function(){
+
+        var cpu = Game.getUsedCpu()
         var target
         var spawn = Game.getObjectById(creep.memory.home.id)
         var extensions = creep.room.memory.structures.extensions
         var spawns = creep.room.memory.structures.spawns
-        /*var targets = []
 
-        for(var item in extensions){
-            targets.push(Game.getObjectById(extensions[item]))
-        }
-        for(var item in spawns){
-            targets.push(Game.getObjectById(spawns[item]))
-        }*/
 
 	       if(this.room.memory.roomEnergy < this.room.memory.energyCapacity ){
-
-
-
+                var targets = []
+                for(var structure in this.room.memory.structures.needsEnergy)
+                {
+                    structure = this.room.memory.structures.needsEnergy[structure]
+                    structure = Game.getObjectById(structure)
+                    targets.push(structure)
+                }
 
                      task = 'assign target extension'
-    	            target = this.pos.findClosest(FIND_MY_STRUCTURES, {filter:function(object){
-    	                if(object.structureType == STRUCTURE_SPAWN || object.structureType == STRUCTURE_EXTENSION)
-    	                if(object.my && object.energy < object.energyCapacity)return object;
+    	            target = this.pos.findClosest(targets)
 
-    	            }})
-
-
-
-
+    	          if(target == null)
+    	          target = targets[0]
 	        }
 
 	        else
@@ -269,6 +295,7 @@
 	        }
 	        else{
 	            this.moveTo(target,{reusePath:20})
+	           // printElapsed(cpu)
 	        }
 
 
@@ -306,5 +333,7 @@
 
  }
 
-
+ function printElapsed(cpu){
+     console.log(Game.getUsedCpu() - cpu)
+ }
  

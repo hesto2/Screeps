@@ -1,4 +1,5 @@
 module.exports=function repair(creep){
+    creep.pickupDropped()
     if(creep.fatigue > 0)return;
     var spawn = creep.memory.home
 	spawn = Game.getObjectById(spawn.id)
@@ -25,8 +26,13 @@ module.exports=function repair(creep){
         }
         var target = creep.memory.target;
         target = Game.getObjectById(target.id)
-        creep.moveTo(target)
-        creep.repair(target)
+        if(target == null)creep.memory.target = 'none'
+        if(creep.pos.isNearTo(target)){
+            creep.repair(target)
+        }
+        else{
+            creep.moveTo(target)
+        }
         checkTarget(creep,target)
     }
 }
@@ -37,29 +43,27 @@ function getTarget(creep,room){
     var ramparts =[]
     var roads = []
     var walls = []
+
+    if(room.memory.threshold == undefined){
+        room.memory.threshold = 1000000
+    }
+
+    var threshold = room.memory.threshold
+
     room.find(FIND_STRUCTURES,{filter:function(object){
-        if(object.hits < object.hitsMax * .75 ){
-            if(object.structureType == STRUCTURE_RAMPART)
-            {
-                if(room.name == 'E2S1' && object.pos.x == 17 && object.pos.y == 18)return;
-                else
-                ramparts.push(object)
-            }
-            else if(object.structureType == STRUCTURE_ROAD){
-                roads.push(object)
-            }
-            else if(object.structureType == STRUCTURE_WALL ){
+        if(object.structureType == STRUCTURE_RAMPART && object.hits < .95 * threshold)
+        {
+            ramparts.push(object)
+        }
+        else if(object.structureType == STRUCTURE_ROAD && object.hits < .75*object.hitsMax){
+            roads.push(object)
+        }
+        else if(object.structureType == STRUCTURE_WALL && object.hits < .95 * threshold ){
 
                 var near = object.pos.findInRange(FIND_HOSTILE_STRUCTURES,3)
-                if( ((room.name =='E3N2') && object.hits < 10000000) ||
-                    ((room.name ==''|| room.name == 'E2S3') && object.hits < 6000000) ||
-                    ((room.name == 'E2S1' || room.name =='E2S2' ) && object.hits < 4000000) ||
-                    ((room.name == 'E4N2') && object.hits < 3000000) ||
-                   ((room.name == '' || room.name == 'E3S1'|| room.name == 'E2S4' || room.name == 'E5S7') && object.hits < 2000000) ||object.hits<1000000){
-                    if(near == false)
-                    walls.push(object)
-                }
-            }
+                if(near.length)near = true
+                if(near == false)
+                walls.push(object)
         }
     }})
     if(creep.memory.task == "roads" && roads.length > 0){
@@ -75,7 +79,9 @@ function getTarget(creep,room){
         creep.memory.target = walls[0];
     }
 
-
+    if(ramparts.length == 0 && walls.length == 0 && room.memory.structures.ramparts.length > 1 && room.memory.structures.walls.length > 1){
+        room.memory.threshold += 1000000
+    }
 
 
 }
@@ -83,7 +89,7 @@ function getTarget(creep,room){
 //Determine if target should keep being repaired or not
 function checkTarget(creep,target){
     if(target == null)return
-    if(target.hits == target.hitsMax || target.hits >= 4000000){
+    if(target.hits == target.hitsMax || target.hits >= creep.room.memory.threshold){
         creep.memory.target = "none";
     }
 }

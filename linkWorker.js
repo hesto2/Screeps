@@ -1,5 +1,5 @@
 module.exports = function(creep){
-    //creep.say("BOO")
+    creep.pickupDropped()
     if(creep.fatigue > 0)return;
    //if(creep.room == Game.flags.test.room) creep.moveTo(Game.flags.test);return;
 	var target = creep.memory.target;
@@ -10,8 +10,15 @@ module.exports = function(creep){
 		creep.transferEnergy(target);
 	}
 	else{
-		if(creep.pos.inRangeTo(target,3)){
-			var source = creep.pos.findClosest(FIND_SOURCES,{maxOps:50});
+	    var source
+	    if(creep.memory.source == undefined){
+	            source = target.pos.findClosest(FIND_SOURCES);
+	        	creep.memory.source = source
+		    }
+
+		    source = creep.memory.source
+		    if(source == null)return
+		    source = Game.getObjectById(source.id)
 			if(creep.pos.isNearTo(source)){
 			    creep.harvest(source);
 			    if(creep.pos.isNearTo(target)){
@@ -22,10 +29,6 @@ module.exports = function(creep){
 			    creep.moveTo(source);
 			}
 
-		}
-		else{
-			var x = creep.moveTo(target,{reusePath:25});
-		}
 
 
 

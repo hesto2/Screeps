@@ -30,6 +30,8 @@
         room.memory.status = ''
         room.memory.sources = []
         room.memory.structures = {}
+        room.memory.guards = []
+        room.memory.droppedEnergy = room.find(FIND_DROPPED_ENERGY)
         room.getStructures()
 
         //room.memory.droppedEnergy = room.find(FIND_DROPPED_ENERGY)
@@ -50,9 +52,9 @@
         }
         var links = room.memory.structures.links;
         doLinks(links)
+        if(room.name == 'E2S1'){
 
-
-
+        }
     }
  }
 

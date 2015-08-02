@@ -5,7 +5,7 @@
 // Optimize FIND AND ATTACK
 //Change where transfers go to by default
 //Use new room strucuters object to maximize repair and transfer efficiency. Eventually set it up to maximize squad attack logic
-
+//Fix guard bug where guards go to wrong flag
 console.log("**********************************************************************")
 var doRoles = require('doRoles')
 var prototypes = require('prototypes')
@@ -35,6 +35,7 @@ prototypes()
     var linkWorkers = {}
     var repairs = {}
     var nomads = {}
+    var guards = []
 
     var squads = []
 
@@ -53,8 +54,15 @@ prototypes()
     squadGroups[3].ranged = {}
     Memory.spawns = Game.spawns
 
+
+    if(Game.time == 20815424){Game.rooms.E2S6.createConstructionSite(24, 17, STRUCTURE_RAMPART)
+        Game.rooms.E2S6.createFlag(24, 17, 'Guard-E2S6-1',COLOR_RED)
+    }
     var cpuRooms = Game.getUsedCpu();
     rooms()
+    test()
+
+
     console.log("ROOMS: " + (Game.getUsedCpu() - cpuRooms) )
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
@@ -106,13 +114,17 @@ prototypes()
             nomads[creep.name] = creep
             room.memory.nomads.push(creep)
         }
+        else if(creep.memory.role == "guard"){
+            guards[creep.name] = creep
+            room.memory.guards.push(creep)
+        }
         if(creep.name == "test"){
             creep.moveTo(Game.flags.TEST)
         }
 
     }
 
-
+    Memory.guards = guards
     Memory.couriers = couriers
     Memory.builders = builders
     Memory.workers = workers
@@ -136,3 +148,10 @@ prototypes()
 
     //console.log("#############MEMORY USAGE#################")
     console.log("SPAWN: " + cpuSpawn);
+
+function test(){
+
+
+
+
+}

@@ -5,8 +5,9 @@ module.exports = function(creep){
 
 	//ASSIGN FLAG TO CREEP
 	/* Flags:
-		purple - All do based on name
+
 		Cyan - Move to Waypoint
+		purple - Waypoint
 
 		Red- Clear room (creeps + buildings)
 		Yellow - Attack Target
@@ -17,48 +18,37 @@ module.exports = function(creep){
 
 	*/
 
-	var flag;
-	var flags = Game.flags;
-	var task = creep.memory.task;
-	var squadFlag = [];
-	for(var gflag in flags){
-		if(gflag.substr(0,gflag.indexOf('-')) == creep.memory.squad){
-			//Check color
-			gflag = Game.flags[gflag]
 
-			if(flag == undefined)flag = gflag;
-			if(gflag.color == COLOR_CYAN)
-			{
-				flag = gflag;
-				break;
-			}
-			else if(gflag.color == COLOR_RED && flag.color != COLOR_CYAN){
-				flag = gflag;
-			}
-			else if(gflag.color == COLOR_YELLOW && flag.color != COLOR_CYAN
-																		      && flag.color != COLOR_RED){
-			  flag = gflag;
-			}
-			else if(gflag.color == COLOR_GREY && flag.color != COLOR_CYAN
-																		    && flag.color != COLOR_RED
-																			  && flag.color != COLOR_YELLOW){
-				flag = gflag;
-			}
-			else if(gflag.color == COLOR_WHITE && flag.color != COLOR_CYAN
-																		     && flag.color != COLOR_RED
-																			   && flag.color != COLOR_YELLOW
-																			   && flag.color != COLOR_GREY){
-				flag = gflag;
-			}
-			else if(gflag.color == COLOR_BLUE){
 
-				flag = gflag;
-			}
-
-		}
+	var flags = Memory.squadGroups[creep.memory.squad].flags
+    var flag
+	if(flags.cyan.length > 0){
+		flag = flags.cyan[flags.cyan.length-1]
+	}
+	else if(flags.green.length > 0){
+		flag = flags.red[flags.red.length-1]
+	}
+	else if(flags.red.length > 0){
+		flag = flags.red[flags.red.length-1]
+	}
+	else if(flags.yellow.length > 0){
+		flag = flags.yellow[flags.yellow.length-1]
+	}
+	else if(flags.grey.length > 0){
+		flag = flags.grey[flags.grey.length-1]
+	}
+	else if(flags.white.length > 0){
+		flag = flags.white[flags.white.length-1]
+	}
+	else if(flags.blue.length > 0){
+		flag = flags.blue[flags.blue.length-1]
 	}
 
+
+
+
 	//Role performance
+	var task = creep.memory.task;
 	if(creep.memory.task == "melee"){
 
 		melee(creep,flag)
@@ -71,5 +61,38 @@ module.exports = function(creep){
 		medic(creep,flag)
 	}
 
+	 //Move Creep to next waypoint
+	if(flags.purple.length > 0){
+		//creep.memory.nextWaypoint = getNextWaypoint(flags.purple,creep)
+	}
 
+
+
+}
+function getNextWaypoint(flags,creep){
+	var number
+	var number = creep.memory.nextWaypoint
+	var flag = Game.flags[creep.memory.squad+'-'+number]
+	if(number == undefined){
+		number = 1
+	}
+	else if(number < 0){
+		return
+	}
+	else{
+		if(creep.pos.isNearTo(flag))
+		{
+			number = number+1
+		}
+	}
+
+
+	if(flag != undefined){
+
+		creep.moveTo(flag, {reusePath:20})
+	}
+	else{
+		number = -1
+	}
+	return number
 }

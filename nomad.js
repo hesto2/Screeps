@@ -1,4 +1,5 @@
 module.exports = function (creep) {
+    creep.pickupDropped()
     if(creep.fatigue > 0)return;
     if(creep.energy == 0 || creep.memory.task == "harvest")
     {
@@ -10,7 +11,7 @@ module.exports = function (creep) {
         }
         else
         {
-            if(creep.memory.target == undefined)
+           /* if(creep.memory.target == undefined)
             {
                 creep.memory.target = Game.flags.nomad.pos.findClosest(FIND_SOURCES)
                 if(target == null){
@@ -22,7 +23,8 @@ module.exports = function (creep) {
             var target = creep.memory.target
             target = Game.getObjectById(target.id)
             creep.moveTo(target)
-            creep.harvest(target)
+            creep.harvest(target)*/
+            creep.harvestAtFlag(Game.flags.nomad,creep)
         }
         if(creep.energy == creep.energyCapacity){
             creep.memory.task = "work"

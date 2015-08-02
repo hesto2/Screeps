@@ -4,6 +4,9 @@ module.exports = function(creep, flag){
 		creep.moveTo(flag,{reusePath:20})
 
 	}
+	else if(flag.color == COLOR_GREEN){
+	    attackPoint(creep,flag)
+	}
 	else if(flag.color == COLOR_RED){
 	    if(creep.room != flag.room){
 	        creep.moveTo(flag)
@@ -51,6 +54,9 @@ function attackPoint(creep,flag){
         return
     }
      var target = creep.room.lookForAt('structure',flag)
+    /*if(target == undefined){
+        var target = creep.room.lookForAt('creep',flag)
+    }*///Attacks own creeps that move there, need to fix it
     if(target == undefined)
     var target = flag.pos.findClosest(FIND_HOSTILE_STRUCTURES, {filter:function(object){
     	    if(object.owner != undefined && object.owner.username != "Source Keeper" && object.owner.username != "ultramixerman" && object.owner.username !="hesto2" &&object.structureType != STRUCTURE_CONTROLLER)

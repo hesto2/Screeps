@@ -98,8 +98,14 @@ function attackPoint(creep,flag){
 	}
     if(target)
     {
-        creep.moveTo(target);
-        creep.attack(target);
+        if(creep.pos.isNearTo(target))
+        {
+            creep.attack(target);
+        }
+        else
+        {
+            creep.moveTo(target,{ignoreDestructibleStructures:true});
+        }
 
     }
 	else

@@ -5,12 +5,13 @@ module.exports = function ()
 	var worker = require("worker")
 	var transfer = require("transfer");
 	var squad = require("squad");
+	var squadManager = require("squadManager")
 	var keeperKiller = require("keeperKiller");
 	var kMedic = require("kMedic");
 	var linkWorker = require("linkWorker");
 	var repair = require("repair");
 	var nomad = require("nomad");
-
+    var guard = require("guard")
 	var startCpu;
 	var elapsed
 
@@ -29,6 +30,7 @@ module.exports = function ()
 	elapsed = Game.getUsedCpu()-startCpu
 	console.log("TRANSFERS: " + elapsed)
 
+	squadManager()
 	startCpu = Game.getUsedCpu()
 	for(creep in Memory.squads){
 		creep = Memory.squads[creep]
@@ -44,6 +46,14 @@ module.exports = function ()
 	}
 	elapsed = Game.getUsedCpu()-startCpu
 	console.log("LINKWORKERS: " + elapsed)
+
+    startCpu = Game.getUsedCpu()
+	for(creep in Memory.guards){
+		creep = Memory.guards[creep]
+		guard(creep)
+	}
+	elapsed = Game.getUsedCpu()-startCpu
+	console.log("GUARDS: " + elapsed)
 
 	startCpu = Game.getUsedCpu()
 	for(creep in Memory.couriers){

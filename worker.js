@@ -1,4 +1,6 @@
 module.exports = function (creep) {
+    creep.pickupDropped()
+    if(creep.room.memory.roomEnergy == creep.room.memory.energyCapacity && creep.energy > .5* creep.energyCapacity && creep.room.controller.level > 5)return
     var cpu = Game.getUsedCpu()
     if(creep.fatigue > 0)return;
 	var spawn = creep.memory.home
@@ -72,13 +74,13 @@ module.exports = function (creep) {
                     creep.memory.task = "meeting"
                 }
                 creep.memory.task = "going";
-                if(creep.room.memory.transfers.length < 3){
+                //if(creep.room.memory.transfers.length < 3){
                     creep.depositEnergy()
-                }
-                else{
-  			        creep.moveTo(spawn,{reusePath:20});
-  	                creep.transferEnergy(spawn)
-                }
+                //}
+                //else{
+  			    //    creep.moveTo(spawn,{reusePath:20});
+  	            //    creep.transferEnergy(spawn)
+                //}
   	            var transfer = creep.pos.findClosest(FIND_MY_CREEPS, {filter:
                     function(object){
                         if(object.memory.role =="transfer")return object;}})
